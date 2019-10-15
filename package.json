@@ -1,0 +1,55 @@
+{
+  "name": "munchkin",
+  "version": "1.0.0",
+  "description": "Munchkin Online Game",
+  "main": "build/index.bundle.js",
+  "scripts": {
+    "build": "yarn clean && yarn webpack",
+    "webpack": "babel-node ./node_modules/webpack/bin/webpack --config ./config/webpack.production.config.js",
+    "clean": "rm -rf build",
+    "start": "babel-node ./node_modules/webpack-dev-server/bin/webpack-dev-server --open --hot --config ./config/webpack.dev.config.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cesumilo/munchkin.git"
+  },
+  "keywords": [
+    "Munchkin",
+    "Card",
+    "Game",
+    "Online"
+  ],
+  "author": "Guillaume Robin",
+  "license": "GPL-3.0-or-later",
+  "bugs": {
+    "url": "https://github.com/cesumilo/munchkin/issues"
+  },
+  "homepage": "https://github.com/cesumilo/munchkin#readme",
+  "devDependencies": {
+    "@babel/core": "^7.6.4",
+    "@babel/node": "^7.6.3",
+    "@babel/preset-env": "^7.6.3",
+    "@babel/preset-react": "^7.6.3",
+    "babel-eslint": "^10.0.3",
+    "babel-loader": "^8.0.6",
+    "css-loader": "^3.2.0",
+    "eslint": "^6.5.1",
+    "eslint-config-airbnb": "^18.0.1",
+    "eslint-plugin-import": "^2.18.2",
+    "eslint-plugin-jsx-a11y": "^6.2.3",
+    "eslint-plugin-react": "^7.16.0",
+    "eslint-plugin-react-hooks": "^1.7.0",
+    "file-loader": "^4.2.0",
+    "html-webpack-plugin": "^3.2.0",
+    "prettier-eslint": "^9.0.0",
+    "style-loader": "^1.0.0",
+    "webpack": "^4.41.2",
+    "webpack-cli": "^3.3.9",
+    "webpack-dev-server": "^3.8.2"
+  },
+  "dependencies": {
+    "react": "^16.10.2",
+    "react-dom": "^16.10.2"
+  }
+}
