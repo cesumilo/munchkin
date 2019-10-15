@@ -1,11 +1,15 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import { Provider } from 'react-redux';
+import App from './components/App.jsx';
+import configureStore from './configureStore';
 
-const HelloWorld = () => (
-  <div>
-    <h1>Hello World!</h1>
-  </div>
+const store = configureStore();
+
+ReactDOM.render(
+  <Provider store={store}>
+    <App />
+  </Provider>,
+  // eslint-disable-next-line
+  document.getElementById('root')
 );
-
-// eslint-disable-next-line
-ReactDOM.render(<HelloWorld />, document.getElementById('root'));
