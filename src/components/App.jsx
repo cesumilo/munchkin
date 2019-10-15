@@ -1,6 +1,9 @@
 import React from 'react';
+import { Container, Row } from 'react-bootstrap';
+import PropTypes from 'prop-types';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
+import '../css/App.css';
 
 /**
  * #92784d Muesli (Light Brown)
@@ -10,10 +13,35 @@ import 'bootstrap/dist/css/bootstrap.min.css';
  * #9d4a4e Roof Terracotta (Red)
  */
 
-const HelloWorld = () => (
-  <div>
-    <h1>Hello World!</h1>
+const Card = ({ idx }) => (
+  <div
+    style={{
+      backgroundColor: 'white',
+      margin: '0 10px',
+      width: '120px',
+      height: '200px',
+    }}
+  >
+    {idx}
   </div>
 );
 
-export default HelloWorld;
+Card.propTypes = {
+  idx: PropTypes.number.isRequired,
+};
+
+const App = () => (
+  <Container className="game-board">
+    <Row className="board"></Row>
+    <Row className="hand">
+      <Card idx={1} />
+      <Card idx={2} />
+      <Card idx={3} />
+      <Card idx={4} />
+      <Card idx={5} />
+      <Card idx={6} />
+    </Row>
+  </Container>
+);
+
+export default App;
