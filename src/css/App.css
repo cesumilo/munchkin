@@ -4,6 +4,14 @@
  * @desc Created on 2019-10-16 12:04:27 am
  * @copyright GPL-3.0
  */
+.ingame-desc {
+  font-family: 'Barlow Semi Condensed', sans-serif;
+}
+
+.ingame-title {
+  font-family: 'Grenze', serif;
+}
+
 body {
   margin: 0;
   padding: 0;

@@ -7,10 +7,19 @@
 .player-info-container {
   height: 14%;
   width: 100%;
-  background-color: red;
   z-index: 1;
 }
 
 .player-info-col {
   width: 100%;
+}
+
+.player-info-texts {
+  display: flex;
+  flex-direction: column;
+}
+
+.player-coins-img {
+  display: inline-block;
+  width: 22px;
 }

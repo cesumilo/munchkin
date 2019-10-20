@@ -7,7 +7,6 @@
 .decks-container {
   height: 27%;
   width: 100%;
-  background-color: yellow;
 }
 
 .decks-col {
@@ -19,10 +18,8 @@
   align-items: center;
 }
 
-.deck {
-  height: 50%;
-  max-width: 100%;
-  border-radius: 15px;
-  overflow: hidden;
+.equip-icon {
+  height: 100%;
   padding: 2px;
+  max-width: 30%;
 }

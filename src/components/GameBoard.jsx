@@ -1,6 +1,6 @@
 import React from 'react';
 import { Row, Col } from 'react-bootstrap';
-import Decks from './Decks.jsx';
+import Equipments from './Equipments.jsx';
 import PlayerInfo from './PlayerInfo.jsx';
 import CardInfo from './CardInfo.jsx';
 
@@ -21,7 +21,7 @@ const GameBoard = () => (
       <Col sm={12} className="left-side-info">
         <PlayerInfo />
         <CardInfo />
-        <Decks />
+        <Equipments />
       </Col>
     </Col>
     <Col
