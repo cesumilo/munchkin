@@ -1,6 +1,7 @@
 import React from 'react';
-import { Container, Row } from 'react-bootstrap';
-import PropTypes from 'prop-types';
+import { Container } from 'react-bootstrap';
+import Hand from './Hand.jsx';
+import GameBoard from './GameBoard.jsx';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '../css/App.css';
@@ -12,36 +13,14 @@ import '../css/App.css';
  * #9e9e9c Mountain Mist (Grey)
  * #9d4a4e Roof Terracotta (Red)
  */
-
-const Card = ({ idx }) => (
-  <div
-    style={{
-      backgroundColor: 'white',
-      margin: '0 10px',
-      width: '120px',
-      height: '200px',
-    }}
-  >
-    {idx}
-  </div>
-);
-
-Card.propTypes = {
-  idx: PropTypes.number.isRequired,
-};
-
 const App = () => (
-  <Container className="game-board">
-    <Row className="board"></Row>
-    <Row className="hand">
-      <Card idx={1} />
-      <Card idx={2} />
-      <Card idx={3} />
-      <Card idx={4} />
-      <Card idx={5} />
-      <Card idx={6} />
-    </Row>
-  </Container>
+  <div className="game-container">
+    <Container className="game-board">
+      <GameBoard />
+      <Hand />
+    </Container>
+    <div className="hand-background" />
+  </div>
 );
 
 export default App;

@@ -1,0 +1,16 @@
+/**
+ * @author Guillaume Robin <>
+ * @file PlayerInfo component stylesheet
+ * @desc Created on 2019-10-20 11:40:21 am
+ * @copyright GPL-3.0
+ */
+.player-info-container {
+  height: 14%;
+  width: 100%;
+  background-color: red;
+  z-index: 1;
+}
+
+.player-info-col {
+  width: 100%;
+}

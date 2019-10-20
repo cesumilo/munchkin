@@ -9,21 +9,43 @@ body {
   padding: 0;
   width: 100vw;
   height: 100vh;
-  background-image: radial-gradient(circle, #92784d, #5c4632);
+  background-color: #3A4F5D;
+}
+
+.game-container {
+  width: 100vw;
+  height: 100vh;
+  position: relative;
 }
 
 .game-board {
   height: 100vh;
+  position: absolute !important;
+  z-index: 1 !important;
+  width: 100vw !important;
+  max-width: 100vw !important;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.hand-background {
+  background-color: #42210B;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100vw;
+  height: 30%;
+  z-index: 0;
 }
 
 .board {
   height: 70%;
+  width: 100%;
 }
 
-.hand {
-  height: 30%;
-  display: flex;
-  justify-content: center;
-  align-content: space-between;
-  flex: 'flex-shrink';
+/* Fix row in bootstrap */
+.row {
+  margin: 0 !important;
 }
