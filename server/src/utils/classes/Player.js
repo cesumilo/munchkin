@@ -7,10 +7,13 @@
 
 import Card from './Card'
 import { READY, START_GAME } from '../actions/Player';
+import Observable from './others/Observable';
 
-export default class Player {
+export default class Player extends Observable {
 
-  constructor(name, socket) {
+  constructor(name, socket, room) {
+    super();
+    this._room = room
     this._socket = socket;
     this._name = name;
     this._lvl = 1;
@@ -32,14 +35,15 @@ export default class Player {
     switch (event.action) {
       case READY:
         this.updateReadiness();
+        this.publish("player:ready", null)
       case START_GAME:
         this.startGame();
       default:
     }
   }
 
-  startGame() {
-    this._socket.emit();
+  isReady() {
+    return this._ready;
   }
 
   updateReadiness() {

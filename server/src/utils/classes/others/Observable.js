@@ -7,10 +7,11 @@
 
 export default class Observable {
   constructor() {
-    this._observer = []
+    this._observers = []
   }
 
   publish(evtName, payload) {
-
+    if(!this._observers[evtName]) return;
+    this._observers[evtName].forEach(subscriberCallback => subscriberCallback(payload))
   }
 }

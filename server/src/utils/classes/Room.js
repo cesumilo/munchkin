@@ -1,4 +1,5 @@
 import Game from "./Game";
+import Observer from "./others/Observer";
 
 /**
  * @author Alexandre SAISON <alexandre.saison@appi-conseil.com>
@@ -7,8 +8,10 @@ import Game from "./Game";
  * @copyright APPI SASU
  */
 
-export default class Room {
+export default class Room extends Observer {
   constructor(index) {
+    super();
+    this.timeouts = []
     this._game = new Game();
     this._name = `Room${index}`;
     this._players = [];
@@ -36,13 +39,25 @@ export default class Room {
   }
 
   startGame() {
-    this._game.startGame();
+    this._game.startGame(this._players);
   }
 
   addPlayer(player) {
-    if(this._players.some(p => p.getID() === player.getID()))
+    if (this._players.some(p => p.getID() === player.getID()))
       throw new Error(`You can't join twice to the room`)
     this._players.push(player)
+    this.subscribe(player, "player:ready", () => {
+      if (this._players.every(p => p.isReady())) {
+        console.log('[LOG] Starting the Counter ! ')
+        this.timeouts.push(setTimeout(() => {
+          this.startGame()
+        }, 3000))
+      }
+    })
+  }
+
+  destroy() {
+    this.timeouts.forEach(timeout => clearTimeout(timeout))
   }
 
   getPlayers() {

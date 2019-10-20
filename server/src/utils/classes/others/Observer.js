@@ -6,15 +6,16 @@ import Observable from "./Observable";
  * @desc Created on 2019-10-20 5:51:26 pm
  * @copyright APPI SASU
  */
-      
+
 export default class Observer {
-  constructor() {
 
-  }
-
-  subscribe(observable) {
-    if(observable instanceof Observable) {
-       
+  subscribe(observable, evtName, callback) {
+    if (observable instanceof Observable) {
+      console.log("Subscribing to => ", observable)
+      if (!observable._observers[evtName]) {
+        observable._observers[evtName] = [];
+      }
+      observable._observers[evtName].push(callback)
     } else throw new Error(`You must only subscribe to an Observable instance type`);
   }
 }
