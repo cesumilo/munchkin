@@ -88,6 +88,8 @@ export default class Player extends Observable {
 
   getAttributes() {
     return {
+      name:  this.getName(),
+      socketID: this.getID(),
       class: this._class,
       race: this._race,
       ready: this._ready,

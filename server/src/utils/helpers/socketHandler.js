@@ -23,7 +23,7 @@ function ROOM_MANAGEMENT(availableRooms, socket, socketServer) {
   }
 
   socket.join(roomToJoin.getName(), (err) => {
-    if (err) socket.emit("socket:error", `Unabled to join room ! Please contact the Administrator`);
+    if (err) return socket.emit("socket:error", `Unabled to join room ! Please contact the Administrator`);
     socket.emit("player:creation", roomToJoin.getName());
     socketServer.to(roomToJoin.getName()).emit("room:message", "Someone joined the ROOM !")
   })
@@ -32,6 +32,10 @@ function ROOM_MANAGEMENT(availableRooms, socket, socketServer) {
     socketServer.to(roomToJoin.getName()).emit('room:message', "Someone has left the ROOM !")
     roomToJoin.removePlayer(socket.id);
     // TODO : Handle GAME Event (Charity PLEEEAAASSSEE !)
+  })
+
+  socket.on("req:update", (socketID) => {
+    
   })
   return roomToJoin;
 }

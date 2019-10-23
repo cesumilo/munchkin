@@ -6,14 +6,18 @@
  */
 
 export default class Card {
-  constructor(title) {
-    this._type = null;
+  constructor(title, type) {
+    this._type = type;
     this._title = title;
   }
 
   applyEffect() {}
   play(player) {}
   getID() {
+    return `${this._type}:${this._title}`;
+  }
+
+  toString() {
     return `${this._type}:${this._title}`;
   }
   /**

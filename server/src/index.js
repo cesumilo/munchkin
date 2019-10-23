@@ -28,16 +28,15 @@ expressServer.use(express.static("public"));
 
 // TODO : Has to be moved to initiator of the GameServer
 const availableRooms = [];
-for (let i = 0; i < 3; i++) {
-  availableRooms.push(createRoom());
-}
 
 httpServer.listen(
   process.env.NODE_ENV === "production" ? process.env.PORT : 3000,
   () => {
-    socketServer.on("connection", socket =>
+    socketServer.on("connection", socket => {
+      for (let i = 0; i < 3; i++) {
+        availableRooms.push(createRoom(socketServer));
+      }
       socketHandler(socketServer, socket, availableRooms)
-    );
-    console.log(`[SERVER] Listen on http://127.0.0.1:3000`);
-  }
-);
+      console.log(`[SERVER] Listen on http://127.0.0.1:3000`);
+    })
+}) 

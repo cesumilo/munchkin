@@ -8,6 +8,6 @@
 import Room from "../classes/Room"
 
 let indexRoomToCreate = 0;
-export const createRoom = () => {
-  return new Room(++indexRoomToCreate);
+export const createRoom = (socketServer) => {
+  return new Room(++indexRoomToCreate, socketServer);
 }

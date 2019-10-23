@@ -8,5 +8,7 @@
 import Card from "./Card";
 
 export default class Donjon extends Card {
-
+  constructor(title) {
+    super(title, "D");
+  }
 }

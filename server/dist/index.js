@@ -37,14 +37,13 @@ expressServer.use((0, _cors["default"])()); // Serve files
 expressServer.use(_express["default"]["static"]("public")); // TODO : Has to be moved to initiator of the GameServer
 
 var availableRooms = [];
-
-for (var i = 0; i < 3; i++) {
-  availableRooms.push((0, _helpers.createRoom)());
-}
-
 httpServer.listen(process.env.NODE_ENV === "production" ? process.env.PORT : 3000, function () {
   socketServer.on("connection", function (socket) {
-    return (0, _socketHandler["default"])(socketServer, socket, availableRooms);
+    for (var i = 0; i < 3; i++) {
+      availableRooms.push((0, _helpers.createRoom)(socketServer));
+    }
+
+    (0, _socketHandler["default"])(socketServer, socket, availableRooms);
+    console.log("[SERVER] Listen on http://127.0.0.1:3000");
   });
-  console.log("[SERVER] Listen on http://127.0.0.1:3000");
 });
