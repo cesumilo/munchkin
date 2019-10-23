@@ -9,6 +9,7 @@ import Card from "./Card";
 import { READY, UNREADY, PLAY_CARD, GIVE_CARD } from "../actions/Player";
 import Observable from "./others/Observable";
 import Room from "./Room";
+import Stage from "./Stage";
 
 export default class Player extends Observable {
 
@@ -34,6 +35,9 @@ export default class Player extends Observable {
     this.waitForEvents();
   }
 
+  /**
+   * @returns {Stage} returns the current stage where the player is involved or null
+   */
   getCurrentStage() {
     return this._currentStage;
   }
@@ -56,20 +60,40 @@ export default class Player extends Observable {
       case READY:
         this.updateReadiness(true);
         this.publish("player:ready", null);
-        this._name = event.payload.name;
-        break;
-      case UNREADY:
-        this.updateReadiness(false);
-        this.publish("player:unready", null);
+        if (!!event.payload && !!event.payload.name) {
+          this._name = event.payload.username;
+          this.sendAttributes();
+        } else {
+        }
         break;
       case PLAY_CARD:
-        this.break;
+
+        break;
       case FINISH_TURN:
         if (this.canFinishLap()) {
           // TODO : Handle update Stage
         }
         break;
       default:
+    }
+  }
+
+  sendAttributes() {
+    this.getSocket().emit("player:update", this.getAttributes());
+  }
+
+  sendError(errorMessage) {
+    this.getSocket().emit("socket:error", errorMessage)
+  }
+
+  getAttributes() {
+    return {
+      class: this._class,
+      race: this._race,
+      ready: this._ready,
+      cards: this._cards,
+      lvl: this._lvl,
+      strength: this.strength
     }
   }
 
@@ -98,7 +122,7 @@ export default class Player extends Observable {
 
   useCard(card, player = this) {
     card.use(player);
-    this._socket.emit("player:useCard", {
+    this.getSocket().emit("player:useCard", {
       level: this._lvl,
       equipments: this._equipments,
       strength: this.getStrength(),

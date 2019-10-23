@@ -28,6 +28,12 @@ export default class Room extends Observer {
    */
   triggerStageFor(player, stage) {
     const currentStage = player.getCurrentStage();
+    if (!!currentStage) {
+
+    } else {
+      console.log("[ROOM] This is the First Stage")
+      // TODO : HANDLE FIRST STAGE
+    }
   }
 
   getName() {
@@ -85,6 +91,10 @@ export default class Room extends Observer {
           this.startGame()
         }, 3000))
       }
+    })
+    this.subscribe(player, "player:unready", () => {
+      if(this.timeouts.length > 0) this.timeouts.splice(this.timeouts.length - 1);
+
     })
   }
 

@@ -16,6 +16,10 @@ export default class Game {
     // TODO : Handle starting game !!!
   }
 
+  endGame() {
+
+  }
+
   isLaunched() {
     return this._isLaunched;
   }
