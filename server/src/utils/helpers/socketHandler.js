@@ -12,6 +12,7 @@ import Room from '../classes/Room';
 function ROOM_MANAGEMENT(availableRooms, socket, socketServer) {
   // Finding the first room which is available
   const roomToJoin = availableRooms.find(room => room.canBeJoined());
+
   if (!roomToJoin) {
     socket.emit("socket:error", `No room available ! Please try on another day !`);
   }

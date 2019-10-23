@@ -1,5 +1,7 @@
 import Game from "./Game";
 import Observer from "./others/Observer";
+import Player from "./Player";
+import Stage from "./Stage";
 
 /**
  * @author Alexandre SAISON <alexandre.saison@appi-conseil.com>
@@ -15,7 +17,17 @@ export default class Room extends Observer {
     this._game = new Game();
     this._name = `Room${index}`;
     this._players = [];
+    this._stages = [];
     this._master = null;
+  }
+
+  /**
+   * Trigger Stage for Player
+   * @param {Player} player 
+   * @param {Stage} stage
+   */
+  triggerStageFor(player, stage) {
+    const currentStage = player.getCurrentStage();
   }
 
   getName() {
@@ -54,7 +66,7 @@ export default class Room extends Observer {
       this._players = this._players.filter(p => p.getID() !== playerToRemove.getID());
       console.log(`[ROOM] AFTER #playerRemove::players_length =>  ${this._players.length}`)
     }
-    console.log('[ROOM] getEvent !!! ', this._players.map(p => ({name: p.getName(), isReady : p.isReady()})))
+    console.log('[ROOM] getEvent !!! ', this._players.map(p => ({ name: p.getName(), isReady: p.isReady() })))
   }
 
   findPlayer(player) {

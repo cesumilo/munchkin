@@ -15,9 +15,6 @@ import http from "http";
 import { createRoom } from "./utils/helpers";
 import socketHandler from "./utils/helpers/socketHandler";
 
-// Routers
-import defaultRouter from "./routes/default";
-
 // Application
 const expressServer = express();
 const httpServer = http.createServer(expressServer);
@@ -37,7 +34,7 @@ for (let i = 0; i < 3; i++) {
 
 httpServer.listen(
   process.env.NODE_ENV === "production" ? process.env.PORT : 3000,
-  function() {
+  () => {
     socketServer.on("connection", socket =>
       socketHandler(socketServer, socket, availableRooms)
     );
