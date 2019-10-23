@@ -57,14 +57,13 @@ export default class Player extends Observable {
     console.log("Received action => ", event);
     switch (event.action) {
       case READY:
-        console.log("ENTER CASE");
         this.updateReadiness(true);
         this.publish("player:ready", null);
         if (!!event.payload && !!event.payload.username) {
-          console.log("ENTER IN IF");
           this._name = event.payload.username;
           this.sendAttributes();
         } else {
+          this.sendError("You must provide a username to tell you're ready !")
         }
         break;
       case PLAY_CARD:
@@ -79,7 +78,6 @@ export default class Player extends Observable {
   }
 
   sendAttributes() {
-    console.log(this.getAttributes());
     this.getSocket().emit("player:update", this.getAttributes());
   }
 
@@ -96,8 +94,13 @@ export default class Player extends Observable {
       ready: this._ready,
       cards: this._cards,
       lvl: this._lvl,
+<<<<<<< HEAD
       strength: this.strength
     };
+=======
+      strength: this._strength
+    }
+>>>>>>> 5b64865af1f54934f844c998631d657407322930
   }
 
   isReady() {
