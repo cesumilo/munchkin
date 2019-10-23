@@ -60,10 +60,11 @@ export default class Player extends Observable {
       case READY:
         this.updateReadiness(true);
         this.publish("player:ready", null);
-        if (!!event.payload && !!event.payload.name) {
+        if (!!event.payload && !!event.payload.username) {
           this._name = event.payload.username;
           this.sendAttributes();
         } else {
+          this.sendError("You must provide a username to tell you're ready !")
         }
         break;
       case PLAY_CARD:
@@ -95,7 +96,7 @@ export default class Player extends Observable {
       ready: this._ready,
       cards: this._cards,
       lvl: this._lvl,
-      strength: this.strength
+      strength: this._strength
     }
   }
 
