@@ -1,6 +1,6 @@
 # Munchkin Online Game
 
-[![Maintainability](https://api.codeclimate.com/v1/badges/3a484cfca726795e50c5/maintainability)](https://codeclimate.com/github/cesumilo/munchkin/maintainability) [![License](https://img.shields.io/badge/license-GPL_3.0-green)](https://github.com/cesumilo/munchkin/blob/master/LICENSE)
+[![Maintainability](https://api.codeclimate.com/v1/badges/3a484cfca726795e50c5/maintainability)](https://codeclimate.com/github/cesumilo/munchkin/maintainability)
 
 <a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/"><img alt="Creative Commons Licence" style="border-width:0" src="https://i.creativecommons.org/l/by-nc/4.0/80x15.png" /></a><br />This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/">Creative Commons Attribution-NonCommercial 4.0 International License</a>.
 
@@ -13,6 +13,10 @@ This project is about creating an online card game based on an existing one call
 ## Motivation
 
 I :heart: this game.
+
+## Changelog
+
+See in [CHANGELOG.md](CHANGELOG.md).
 
 ## Contributing
 
