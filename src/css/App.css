@@ -1,0 +1,29 @@
+/**
+ * @author Guillaume Robin <>
+ * @file App component stylesheet
+ * @desc Created on 2019-10-16 12:04:27 am
+ * @copyright GPL-3.0
+ */
+body {
+  margin: 0;
+  padding: 0;
+  width: 100vw;
+  height: 100vh;
+  background-image: radial-gradient(circle, #92784d, #5c4632);
+}
+
+.game-board {
+  height: 100vh;
+}
+
+.board {
+  height: 70%;
+}
+
+.hand {
+  height: 30%;
+  display: flex;
+  justify-content: center;
+  align-content: space-between;
+  flex: 'flex-shrink';
+}
