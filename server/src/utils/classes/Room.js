@@ -11,8 +11,9 @@ import Stage from "./Stage";
  */
 
 export default class Room extends Observer {
-  constructor(index) {
+  constructor(index, socketServer) {
     super();
+    this._serverSocket = socketServer;
     this.timeouts = []
     this._game = new Game();
     this._name = `Room${index}`;
@@ -81,20 +82,20 @@ export default class Room extends Observer {
   }
 
   addPlayer(player) {
-    console.log('[ROOM] getEvent !!! ', this._players.map(p => p.isReady()))
+    console.log(`[ROOM] #addPlayer::player => ${player.getName()}`)
     if (this._players.some(p => p.getID() === player.getID()))
       throw new Error(`You can't join twice to the room`)
     this._players.push(player)
     this.subscribe(player, "player:ready", () => {
       if (this._players.length >= 3 && this._players.every(p => p.isReady())) {
-        this.timeouts.push(setTimeout(() => {
-          this.startGame()
-        }, 3000))
+        const toggleSecond = (counter = 3) => {
+          if (counter > 0) {
+            this._serverSocket.to(this._name).emit("game:countdown", counter);
+            return setTimeout(() => toggleSecond(counter - 1), 1000);
+          }
+          return this.startGame();
+        }
       }
-    })
-    this.subscribe(player, "player:unready", () => {
-      if(this.timeouts.length > 0) this.timeouts.splice(this.timeouts.length - 1);
-
     })
   }
 
