@@ -1,0 +1,25 @@
+{
+  "name": "server",
+  "version": "1.0.0",
+  "description": "Munchkin",
+  "main": "index.js",
+  "scripts": {
+    "build": "babel -d dist src",
+    "start": "yarn build && node dist/index.js",
+    "version": "babel --version"
+  },
+  "repository": "https://www.github.com/cesumilo/munchkin",
+  "author": "Alexandre SAISON <alexandre.saison.pro@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "@babel/cli": "^7.6.4",
+    "@babel/core": "^7.6.4",
+    "@babel/node": "^7.6.3",
+    "@babel/preset-env": "^7.6.3",
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
+    "helmet": "^3.21.1",
+    "path": "^0.12.7",
+    "socket.io": "^2.3.0"
+  }
+}

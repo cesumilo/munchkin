@@ -21,6 +21,13 @@
     "Online"
   ],
   "author": "Guillaume Robin",
+  "maintainers": [
+    {
+      "email": "alexandre.saison.pro@gmail.com",
+      "name": "Alexandre Saison",
+      "url": "https://github.com/saisona"
+    }
+  ],
   "license": "GPL-3.0-or-later",
   "bugs": {
     "url": "https://github.com/cesumilo/munchkin/issues"
