@@ -10,22 +10,21 @@ var _socket = _interopRequireDefault(require("socket.io"));
 
 var _http = _interopRequireDefault(require("http"));
 
+var _path = _interopRequireDefault(require("path"));
+
 var _helpers = require("./utils/helpers");
 
 var _socketHandler = _interopRequireDefault(require("./utils/helpers/socketHandler"));
 
-var _default = _interopRequireDefault(require("./routes/default"));
-
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
 /**
- * @author Alexandre SAISON <alexandre.saison.pro@gmail.com>
- * @file server main file
- * @desc Created on 2019-10-20 1:07:51 pm
- * @copyright APPI SASU
+ * @author Guillaume Robin and Alexandre Saison <>
+ * @file Index file for munchkin server
+ * @desc Created on 2019-10-23 9:35:00 pm
+ * @copyright Creative Commons Attribution-NonCommercial 4.0 International License
  */
 // Helpers
-// Routers
 // Application
 var expressServer = (0, _express["default"])();
 

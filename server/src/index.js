@@ -1,22 +1,19 @@
 /**
- * @author Alexandre SAISON <alexandre.saison.pro@gmail.com>
- * @file server main file
- * @desc Created on 2019-10-20 1:07:51 pm
- * @copyright APPI SASU
+ * @author Guillaume Robin and Alexandre Saison <>
+ * @file Index file for munchkin server
+ * @desc Created on 2019-10-23 9:35:00 pm
+ * @copyright Creative Commons Attribution-NonCommercial 4.0 International License
  */
-
 import express from "express";
 import helm from "helmet";
 import cors from "cors";
 import io from "socket.io";
 import http from "http";
+import path from "path";
 
 // Helpers
 import { createRoom } from "./utils/helpers";
 import socketHandler from "./utils/helpers/socketHandler";
-
-// Routers
-import defaultRouter from "./routes/default";
 
 // Application
 const expressServer = express();
