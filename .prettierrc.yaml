@@ -1,8 +1,0 @@
-##
-# @author Guillaume Robin <>
-# @file prettier configuration
-# @desc Created on 2019-10-15 11:15:51 pm
-# @copyright GPL-3.0
-#
-singleQuote: true
-trailingComma: "es5"
