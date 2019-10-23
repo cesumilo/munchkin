@@ -1,7 +1,5 @@
 # Munchkin Online Game
 
-[![Maintainability](https://api.codeclimate.com/v1/badges/3a484cfca726795e50c5/maintainability)](https://codeclimate.com/github/cesumilo/munchkin/maintainability) [![License](https://img.shields.io/badge/license-GPL_3.0-green)](https://github.com/cesumilo/munchkin/blob/master/LICENSE)
-
 Made with :heart: from Paris :fr:
 
 ## About
