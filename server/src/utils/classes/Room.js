@@ -1,5 +1,7 @@
 import Game from "./Game";
 import Observer from "./others/Observer";
+import Player from "./Player";
+import Stage from "./Stage";
 
 /**
  * @author Alexandre SAISON <alexandre.saison@appi-conseil.com>
@@ -15,7 +17,23 @@ export default class Room extends Observer {
     this._game = new Game();
     this._name = `Room${index}`;
     this._players = [];
+    this._stages = [];
     this._master = null;
+  }
+
+  /**
+   * Trigger Stage for Player
+   * @param {Player} player 
+   * @param {Stage} stage
+   */
+  triggerStageFor(player, stage) {
+    const currentStage = player.getCurrentStage();
+    if (!!currentStage) {
+
+    } else {
+      console.log("[ROOM] This is the First Stage")
+      // TODO : HANDLE FIRST STAGE
+    }
   }
 
   getName() {
@@ -54,7 +72,7 @@ export default class Room extends Observer {
       this._players = this._players.filter(p => p.getID() !== playerToRemove.getID());
       console.log(`[ROOM] AFTER #playerRemove::players_length =>  ${this._players.length}`)
     }
-    console.log('[ROOM] getEvent !!! ', this._players.map(p => ({name: p.getName(), isReady : p.isReady()})))
+    console.log('[ROOM] getEvent !!! ', this._players.map(p => ({ name: p.getName(), isReady: p.isReady() })))
   }
 
   findPlayer(player) {
@@ -73,6 +91,10 @@ export default class Room extends Observer {
           this.startGame()
         }, 3000))
       }
+    })
+    this.subscribe(player, "player:unready", () => {
+      if(this.timeouts.length > 0) this.timeouts.splice(this.timeouts.length - 1);
+
     })
   }
 

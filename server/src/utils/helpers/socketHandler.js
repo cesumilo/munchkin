@@ -12,6 +12,7 @@ import Room from '../classes/Room';
 function ROOM_MANAGEMENT(availableRooms, socket, socketServer) {
   // Finding the first room which is available
   const roomToJoin = availableRooms.find(room => room.canBeJoined());
+
   if (!roomToJoin) {
     socket.emit("socket:error", `No room available ! Please try on another day !`);
   }
@@ -35,27 +36,6 @@ function ROOM_MANAGEMENT(availableRooms, socket, socketServer) {
     // TODO : Handle GAME Event (Charity PLEEEAAASSSEE !)
   })
   return roomToJoin;
-}
-
-/**
- * 
- * @param {Room} room 
- * @param {SocketIO.EngineSocket} socket 
- * @param {*} socketServer 
- */
-function PLAYER_MANAGEMENT (room, socket, socketServer) {
-  console.log('[SERVER][PLAYER_MANAGEMENT] room => ', room)
-
-  socket.on("stage:update",  function(payload) {
-
-  })
-  socket.on("player:card:use", function(cardID) {
-    const currentPlayer = room.findPlayer(cardID)
-    if (!currentPlayer) {
-      throw new Error("Cannot find current player");
-    }
-
-  })
 }
 
 export default (socketServer, socket, availableRooms) => {
