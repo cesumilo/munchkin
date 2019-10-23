@@ -38,6 +38,6 @@ for (let i = 0; i < 3; i++) {
 
 
 httpServer.listen(process.env.NODE_ENV === "production" ? process.env.PORT : 3000, function () {
-  socketServer.on("connection", socket => socketHandler(socket, availableRooms));
-  console.log(`[LOG] Listen on http://127.0.0.1:3000`)
+  socketServer.on("connection", socket => socketHandler(socketServer, socket, availableRooms));
+  console.log(`[SERVER] Listen on http://127.0.0.1:3000`)
 })

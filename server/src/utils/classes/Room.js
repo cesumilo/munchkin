@@ -42,13 +42,33 @@ export default class Room extends Observer {
     this._game.startGame(this._players);
   }
 
+  endGame() {
+    // TODO : Must be called before removing the Room
+    this.destroy()
+  }
+
+  removePlayer(playerID) {
+    const playerToRemove = this.findPlayer(playerID)
+    if (!!playerToRemove) {
+      console.log(`[ROOM] BEFORE #playerRemove::players_length =>  ${this._players.length}`)
+      this._players = this._players.filter(p => p.getID() !== playerToRemove.getID());
+      console.log(`[ROOM] AFTER #playerRemove::players_length =>  ${this._players.length}`)
+    }
+    console.log('[ROOM] getEvent !!! ', this._players.map(p => ({name: p.getName(), isReady : p.isReady()})))
+  }
+
+  findPlayer(player) {
+    console.log('[ROOM] #findPlayer::player =>  ', player)
+    return this._players.find(p => p.getID() === player);
+  }
+
   addPlayer(player) {
+    console.log('[ROOM] getEvent !!! ', this._players.map(p => p.isReady()))
     if (this._players.some(p => p.getID() === player.getID()))
       throw new Error(`You can't join twice to the room`)
     this._players.push(player)
     this.subscribe(player, "player:ready", () => {
-      if (this._players.every(p => p.isReady())) {
-        console.log('[LOG] Starting the Counter ! ')
+      if (this._players.length >= 3 && this._players.every(p => p.isReady())) {
         this.timeouts.push(setTimeout(() => {
           this.startGame()
         }, 3000))

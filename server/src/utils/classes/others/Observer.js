@@ -11,7 +11,6 @@ export default class Observer {
 
   subscribe(observable, evtName, callback) {
     if (observable instanceof Observable) {
-      console.log("Subscribing to => ", observable)
       if (!observable._observers[evtName]) {
         observable._observers[evtName] = [];
       }

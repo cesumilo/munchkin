@@ -11,7 +11,7 @@ export default class Game {
   }
 
   startGame(players) {
-    console.log("[LOG] Starting the game ! Enjoy")
+    console.log("[GAME] Starting the game ! Enjoy")
     this._isLaunched = true;
     // TODO : Handle starting game !!!
   }
@@ -20,7 +20,4 @@ export default class Game {
     return this._isLaunched;
   }
 
-  findPlayer(playerList, player) {
-    return playerList.find(p => p.getID() === player.getID());
-  }
 }

@@ -5,25 +5,29 @@
  * @copyright APPI SASU
  */
 
-export class IEffect {
-  static apply(parentClassInstance, ...otherClasses) {
-    if  (typeof parentClassInstance !== "function")
-      throw new Error("classInstance must be a Class")
-    const tmpClass = class TmpClass extends parentClassInstance{}
-    for (classInstance in otherClasses) {
-      for(method of classInstance.prototype) {
-        if (!!tmpClass.prototype.method) {
-          console.warn(`Warning : ${method} already exists !`)
-        }
-        tmpClass.prototype.method = method;
-      }
-    }
-  }
-}
 
 export default class Card {
-  
+
   constructor(title) {
+    this._type = null;
     this._title = title;
+  }
+
+  applyEffect() { }
+  play(player) { }
+  getID() {
+    return `${this._type}:${this._title}`:
+  }
+  /**
+   * 
+   * @param {Array<Card>} hand 
+   * @param {string} cardID 
+   */
+  static getCard(hand, cardID) {
+    const potentialCard = hand.find(c => c.getID() === cardID)
+    if (!potentialCard) {
+      throw new Error("Card " + cardID + " hasn't been found");
+    }
+    return potentialCard;
   }
 }

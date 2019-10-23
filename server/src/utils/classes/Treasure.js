@@ -9,25 +9,30 @@ import Card, { IEffect } from "./Card";
 import { LEVEL_DOWN, LEVEL_UP, UPDATE_ATTR} from '../actions/Effect'
 import Player from "./Player";
 
-export default class Treasure extends IEffect.apply(Card, []) {
-  constructor(title) {
-    super(title)
+export default class Treasure extends Card {
 
+  /**
+   * @param {string} title of the Card
+   * @param {string} type can be Ring / Buff / Stuff
+   * @param {function} effect function that takes player as parametter to apply everything it needs
+   * @param {function} condition function that takes player as parametter to know if it's usable 
+   */
+  constructor(title, type, effect, condition) {
+    super(title)
+    this._type = type;
+    this._effect = effect;
+    this._condition = condition;
   }
 
-  applyEffect(effect, player) { 
-    if (player instanceof Player) {
-      switch(effect.action) {
-        case LEVEL_UP: 
-        case LEVEL_DOWN:
-          player.updateLevel(effect.payload);
-          break;
-        case UPDATE_ATTR : 
-          // TODO : Handle this with the cards
-        default : 
-          return player
-      }
-    } else throw new Error(`player must be an instance of Player`)
+  
+  /**
+   * Player will use the Card  
+   * @param {Player} player 
+   */
+  use(player) {
+    if(this._condition(player)) {
+      this._effect(player)
+    }
   }
 
 }

@@ -6,7 +6,7 @@
  */
 
 import Card from './Card'
-import { READY, START_GAME } from '../actions/Player';
+import { READY, UNREADY, PLAY_CARD, GIVE_CARD } from '../actions/Player';
 import Observable from './others/Observable';
 
 export default class Player extends Observable {
@@ -34,10 +34,21 @@ export default class Player extends Observable {
     console.log('Received action => ', event);
     switch (event.action) {
       case READY:
-        this.updateReadiness();
+        this.updateReadiness(true);
         this.publish("player:ready", null)
-      case START_GAME:
-        this.startGame();
+        break;
+      case UNREADY : 
+        this.updateReadiness(false);
+        this.publish("player:unready", null);
+        break;
+      case PLAY_CARD: 
+        this. 
+        break;
+      case FINISH_TURN:
+        if(this.canFinishLap()) {
+          // TODO : Handle update Stage
+        }
+        break:
       default:
     }
   }
@@ -46,8 +57,8 @@ export default class Player extends Observable {
     return this._ready;
   }
 
-  updateReadiness() {
-    this._ready = !this._ready;
+  updateReadiness(ready) {
+    this._ready = ready;
     this._socket.emit("room:message", `You are ${this._ready ? '' : 'not'} ready`);
   }
 
@@ -61,6 +72,18 @@ export default class Player extends Observable {
     if (card.hasEffect())
       card.applyEffect(this)
     this._cards.push(card)
+  }
+
+  useCard(card, player = this) {
+    card.use(player);
+    this._socket.emit("player:useCard", {
+      level : this._lvl,
+      equipments : this._equipments,
+      strength : this.getStrength(),
+      race : this._race,
+      className : this._class,
+      cards : this._cards.map(c => c.constructor.name())
+    })
   }
 
   canFinishLap() {
@@ -83,7 +106,9 @@ export default class Player extends Observable {
     return this._socket.id;
   }
 
-
+  getName() {
+    return this._name;
+  }
 
   giveCard(card) {
     // TODO : Handle this when socket.io
