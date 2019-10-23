@@ -1,9 +1,10 @@
 /**
- * @author Guillaume Robin <>
- * @file Redux reducers
- * @desc Created on 2019-10-15 11:25:20 pm
- * @copyright GPL-3.0
+ * @author Guillaume Robin and Alexandre Saison <>
+ * @file Combine reducers
+ * @desc Created on 2019-10-23 10:05:28 pm
+ * @copyright Creative Commons Attribution-NonCommercial 4.0 International License
  */
 import { combineReducers } from 'redux';
+import { app } from './app';
 
-export default combineReducers({});
+export default combineReducers({ app });

@@ -1,0 +1,31 @@
+/**
+ * @author Guillaume Robin and Alexandre Saison <>
+ * @file Play component stylesheet
+ * @desc Created on 2019-10-23 11:08:41 pm
+ * @copyright Creative Commons Attribution-NonCommercial 4.0 International License
+ */
+.game-background {
+  background-color: #3a4f5d;
+}
+
+.play-form-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+#play-button {
+  width: 100%;
+  background-color: #603813;
+  border-color: #603813;
+}
+
+#play-button:hover {
+  border-color: #42210b;
+}
+
+#username-input:focus {
+  border-color: #42210b;
+  box-shadow: 0 0 0 0.2rem rgba(66, 33, 11, 0.25);
+}
