@@ -6,8 +6,6 @@
  */
 
 import Player from '../classes/Player'
-import Room from '../classes/Room';
-
 
 function ROOM_MANAGEMENT(availableRooms, socket, socketServer) {
   // Finding the first room which is available
@@ -39,6 +37,5 @@ function ROOM_MANAGEMENT(availableRooms, socket, socketServer) {
 }
 
 export default (socketServer, socket, availableRooms) => {
-  const room = ROOM_MANAGEMENT(availableRooms, socket, socketServer);
-  PLAYER_MANAGEMENT(room, socket, socketServer);
+  ROOM_MANAGEMENT(availableRooms, socket, socketServer);
 }
