@@ -5,25 +5,24 @@
  * @copyright APPI SASU
  */
 
-import Card from './Card'
-import { READY, UNREADY, PLAY_CARD, GIVE_CARD } from '../actions/Player';
-import Observable from './others/Observable';
+import Card from "./Card";
+import { READY, UNREADY, PLAY_CARD, GIVE_CARD } from "../actions/Player";
+import Observable from "./others/Observable";
 
 export default class Player extends Observable {
-
   constructor(name, socket, room) {
     super();
-    this._room = room
+    this._room = room;
     this._socket = socket;
     this._name = name;
     this._lvl = 1;
     this._strength = 0;
-    this._equipments = []
-    this._cards = []
-    this._race = "Humain"
-    this._class = "None"
+    this._equipments = [];
+    this._cards = [];
+    this._race = "Humain";
+    this._class = "None";
     this._ready = false;
-    this.waitForEvents()
+    this.waitForEvents();
   }
 
   waitForEvents() {
@@ -31,24 +30,23 @@ export default class Player extends Observable {
   }
 
   handleEvent(event) {
-    console.log('Received action => ', event);
+    console.log("Received action => ", event);
     switch (event.action) {
       case READY:
         this.updateReadiness(true);
-        this.publish("player:ready", null)
+        this.publish("player:ready", null);
         break;
-      case UNREADY : 
+      case UNREADY:
         this.updateReadiness(false);
         this.publish("player:unready", null);
         break;
-      case PLAY_CARD: 
-        this. 
-        break;
+      case PLAY_CARD:
+        this.break;
       case FINISH_TURN:
-        if(this.canFinishLap()) {
+        if (this.canFinishLap()) {
           // TODO : Handle update Stage
         }
-        break:
+        break;
       default:
     }
   }
@@ -59,31 +57,33 @@ export default class Player extends Observable {
 
   updateReadiness(ready) {
     this._ready = ready;
-    this._socket.emit("room:message", `You are ${this._ready ? '' : 'not'} ready`);
+    this._socket.emit(
+      "room:message",
+      `You are ${this._ready ? "" : "not"} ready`
+    );
   }
 
   getStrength() {
-    return this._lvl + this._equipments.reduce((a, c) => a + c.getValue(), 0)
+    return this._lvl + this._equipments.reduce((a, c) => a + c.getValue(), 0);
   }
 
   getCard(card) {
     if (!(card instanceof Card))
-      throw new Error('card parameter must be a Card object');
-    if (card.hasEffect())
-      card.applyEffect(this)
-    this._cards.push(card)
+      throw new Error("card parameter must be a Card object");
+    if (card.hasEffect()) card.applyEffect(this);
+    this._cards.push(card);
   }
 
   useCard(card, player = this) {
     card.use(player);
     this._socket.emit("player:useCard", {
-      level : this._lvl,
-      equipments : this._equipments,
-      strength : this.getStrength(),
-      race : this._race,
-      className : this._class,
-      cards : this._cards.map(c => c.constructor.name())
-    })
+      level: this._lvl,
+      equipments: this._equipments,
+      strength: this.getStrength(),
+      race: this._race,
+      className: this._class,
+      cards: this._cards.map(c => c.constructor.name())
+    });
   }
 
   canFinishLap() {

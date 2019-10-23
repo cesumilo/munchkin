@@ -6,66 +6,33 @@
  -->
 <!DOCTYPE html>
 <html lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+    <title>Munchkin Online Game</title>
 
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-  <title>Munchkin Online Game</title>
+    <!-- Fonts -->
+    <link
+      href="https://fonts.googleapis.com/css?family=Barlow+Semi+Condensed:300,400,700|EB+Garamond:400,700|Grenze:300,400,700&display=swap"
+      rel="stylesheet"
+    />
 
-  <!-- Fonts -->
-  <link
-    href="https://fonts.googleapis.com/css?family=Barlow+Semi+Condensed:300,400,700|EB+Garamond:400,700|Grenze:300,400,700&display=swap"
-    rel="stylesheet" />
-</head>
-
-<body>
-  <noscript>
-    You need to enable JavaScript to run this app.
-  </noscript>
-  <div id="root">
-    <button onclick="ready()">READY ?</button>
-  </div>
-  <!--
+    <!-- Load socket.io -->
+    <script src="/socket.io/socket.io.js"></script>
+  </head>
+  <body>
+    <noscript>
+      You need to enable JavaScript to run this app.
+    </noscript>
+    <div id="root"></div>
+    <!--
       This HTML file is a template.
       If you open it directly in the browser, you will see an empty page.
       You can add webfonts, meta tags, or analytics to this file.
       The build step will place the bundled scripts into the <body> tag.
     -->
-  <script src="/socket.io/socket.io.js"></script>
-  <script>
-    const socket = io();
-    let room = null;
-    let isReady = false
-    function ready() {
-      console.log('[LOG] clicked ready => ', room)
-      if (!isReady)
-        socket.emit('player:action', {
-          action: "READY"
-        })
-      else
-        socket.emit('player:action', {
-          action: "UNREADY"
-        })
-      isReady = !isReady
-    }
-
-    socket.on('player:disconnect', function (socketID) {
-      console.log(`[LOG] WARNING : ${socketID} has been disconected`)
-    })
-
-    socket.on('player:creation', function (roomToJoin) {
-      console.log("You joined " + roomToJoin);
-      room = roomToJoin
-    })
-
-    socket.on("room:message", function (message) {
-      console.log('Someone wrote : ' + message);
-    })
-
-    socket.on('socket:error', function (error) {
-      alert(error);
-    })
-  </script>
-</body>
-
+  <script type="text/javascript" src="index.bundle.js"></script></body>
 </html>
