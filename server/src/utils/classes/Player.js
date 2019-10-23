@@ -12,12 +12,11 @@ import Room from "./Room";
 import Stage from "./Stage";
 
 export default class Player extends Observable {
-
   /**
-   * 
-   * @param {string} name 
-   * @param {SocketIO.Socket} socket 
-   * @param {Room} room 
+   *
+   * @param {string} name
+   * @param {SocketIO.Socket} socket
+   * @param {Room} room
    */
   constructor(name, socket, room) {
     super();
@@ -51,23 +50,24 @@ export default class Player extends Observable {
   }
 
   /**
-   * @param {string} event.action ACTION to triggger 
+   * @param {string} event.action ACTION to triggger
    * @param {object} event.payload payload to give to server
    */
   handleEvent(event) {
     console.log("Received action => ", event);
     switch (event.action) {
       case READY:
+        console.log("ENTER CASE");
         this.updateReadiness(true);
         this.publish("player:ready", null);
-        if (!!event.payload && !!event.payload.name) {
+        if (!!event.payload && !!event.payload.username) {
+          console.log("ENTER IN IF");
           this._name = event.payload.username;
           this.sendAttributes();
         } else {
         }
         break;
       case PLAY_CARD:
-
         break;
       case FINISH_TURN:
         if (this.canFinishLap()) {
@@ -79,16 +79,17 @@ export default class Player extends Observable {
   }
 
   sendAttributes() {
+    console.log(this.getAttributes());
     this.getSocket().emit("player:update", this.getAttributes());
   }
 
   sendError(errorMessage) {
-    this.getSocket().emit("socket:error", errorMessage)
+    this.getSocket().emit("socket:error", errorMessage);
   }
 
   getAttributes() {
     return {
-      name:  this.getName(),
+      name: this.getName(),
       socketID: this.getID(),
       class: this._class,
       race: this._race,
@@ -96,7 +97,7 @@ export default class Player extends Observable {
       cards: this._cards,
       lvl: this._lvl,
       strength: this.strength
-    }
+    };
   }
 
   isReady() {

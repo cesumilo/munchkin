@@ -4,6 +4,8 @@
  * @desc Created on 2019-10-23 11:25:29 pm
  * @copyright Creative Commons Attribution-NonCommercial 4.0 International License
  */
+import { playerUpdate } from './player';
+
 export const PLAY_ON_CHANGE_USERNAME = 'PLAY_ON_CHANGE_USERNAME';
 export const PLAY_IS_READY_REQUEST = 'PLAY_IS_READY_REQUEST';
 
@@ -22,6 +24,8 @@ export const playIsReady = () => {
     const { username } = getState().play;
 
     dispatch(playIsReadyRequest());
+
+    socket.on('player:update', data => dispatch(playerUpdate(data)));
 
     socket.emit('player:action', {
       action: 'READY',

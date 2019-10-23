@@ -1,6 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { Container, Row, Col, Form, Button } from 'react-bootstrap';
+import MunchkinLogo from '../img/Logos/munchkin-logo.png';
 
 import { playIsReady, playOnChangeUsername } from '../redux/actions/play';
 
@@ -11,6 +12,7 @@ const Play = ({ usernameOnChange, play }) => (
     <Row className="full-page game-background">
       <Col sm={4} />
       <Col sm={4} className="play-form-container">
+        <img src={MunchkinLogo} alt="munchkin logo" id="play-logo" />
         <Form>
           <Form.Group controlId="formBasicUsername">
             <Form.Control

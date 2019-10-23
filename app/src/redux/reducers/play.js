@@ -15,7 +15,7 @@ const initialState = {
 };
 
 export const play = (state = initialState, { type, payload }) => {
-  switch (action.type) {
+  switch (type) {
     case PLAY_IS_READY_REQUEST:
       return { ...state, loading: true };
     case PLAY_ON_CHANGE_USERNAME:

@@ -33,6 +33,7 @@ export const app = (state = initialState, { type, payload }) => {
     case APP_LOAD_SOCKET_SUCCESS:
       return { ...state, connecting: false, socket: payload };
     case APP_LOAD_SOCKET_ERROR:
+      console.log(payload);
       return { ...state, connecting: false, socket: null, error: payload };
     default:
       return state;
