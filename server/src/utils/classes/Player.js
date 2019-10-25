@@ -102,13 +102,8 @@ export default class Player extends Observable {
       ready: this._ready,
       cards: this._cards,
       lvl: this._lvl,
-<<<<<<< HEAD
-      strength: this.strength
-    };
-=======
       strength: this._strength
     }
->>>>>>> 5b64865af1f54934f844c998631d657407322930
   }
 
   isReady() {
