@@ -7,7 +7,14 @@
 
 import Player from '../classes/Player'
 import Room from '../classes/Room';
+import { createRoom } from '../helpers/index'
 
+/**
+ * 
+ * @param {SocketIO.Client} socket use to the Player instance
+ * @param {Room} room instance of the Room to join
+ * @param {string} playerName name of the master player that has created the Room
+ */
 export function joinRoom(socket, room, playerName) {
   const player = new Player(playerName, socket, room);
 
@@ -32,10 +39,16 @@ export function joinRoom(socket, room, playerName) {
  */
 export function ROOM_MANAGEMENT(availableRooms, socket, socketServer) {
   let connectionAttempt = 0;
+
+  /**
+   * @param {string} payload.roomName represents the name of the Room to create
+   * @param {string} payload.playerName represents the name of the Master to create with the Room
+   */
   socket.on("room:create", payload => {
-    if (!!payload.room && !!payload.room.name) {
-      const newRoom = createRoom(socketServer, payload.room.name)
+    if (!!payload.roomName) {
+      const newRoom = createRoom(socketServer, payload.roomName)
       availableRooms.push(newRoom);
+      joinRoom(socket, newRoom, payload.playerName);
       socket.emit("room:meesage", `You created ${newRoom.getName()}`);
     } else {
       socket.emit("socket:error", "You must provide payload object with name of the room");
@@ -68,7 +81,7 @@ export function ROOM_MANAGEMENT(availableRooms, socket, socketServer) {
       roomToJoin.removePlayer(socket.id);
       // TODO : Handle GAME Event (Charity PLEEEAAASSSEE !)
     } else {
-      //TODO : Reconnection attemt 
+      //TODO : Reconnection attempt 
     }
   })
 
