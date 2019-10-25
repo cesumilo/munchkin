@@ -25,12 +25,12 @@ export const appLoadSocketRequest = () => ({
 });
 
 export const appLoadSocketSuccess = socket => ({
-  type: APP_LOAD_SOCKET_REQUEST,
+  type: APP_LOAD_SOCKET_SUCCESS,
   payload: socket,
 });
 
 export const appLoadSocketError = err => ({
-  type: APP_LOAD_SOCKET_REQUEST,
+  type: APP_LOAD_SOCKET_ERROR,
   error: true,
   payload: err,
 });

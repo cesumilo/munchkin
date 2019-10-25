@@ -12,12 +12,11 @@ import Room from "./Room";
 import Stage from "./Stage";
 
 export default class Player extends Observable {
-
   /**
-   * 
-   * @param {string} name 
-   * @param {SocketIO.Socket} socket 
-   * @param {Room} room 
+   *
+   * @param {string} name
+   * @param {SocketIO.Socket} socket
+   * @param {Room} room
    */
   constructor(name, socket, room) {
     super();
@@ -59,7 +58,7 @@ export default class Player extends Observable {
   }
 
   /**
-   * @param {string} event.action ACTION to triggger 
+   * @param {string} event.action ACTION to triggger
    * @param {object} event.payload payload to give to server
    */
   handleEvent(event) {
@@ -76,7 +75,6 @@ export default class Player extends Observable {
         }
         break;
       case PLAY_CARD:
-
         break;
       case FINISH_TURN:
         if (this.canFinishLap()) {
@@ -92,7 +90,7 @@ export default class Player extends Observable {
   }
 
   sendError(errorMessage) {
-    this.getSocket().emit("socket:error", errorMessage)
+    this.getSocket().emit("socket:error", errorMessage);
   }
 
   getAttributes() {
@@ -104,8 +102,13 @@ export default class Player extends Observable {
       ready: this._ready,
       cards: this._cards,
       lvl: this._lvl,
+<<<<<<< HEAD
+      strength: this.strength
+    };
+=======
       strength: this._strength
     }
+>>>>>>> 5b64865af1f54934f844c998631d657407322930
   }
 
   isReady() {

@@ -6,5 +6,7 @@
  */
 import { combineReducers } from 'redux';
 import { app } from './app';
+import { play } from './play';
+import { player } from './player';
 
-export default combineReducers({ app });
+export default combineReducers({ app, play, player });

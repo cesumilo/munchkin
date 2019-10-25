@@ -5,7 +5,7 @@
  * @copyright Creative Commons Attribution-NonCommercial 4.0 International License
  */
 .game-background {
-  background-color: #3a4f5d;
+  background-color: #42210b;
 }
 
 .play-form-container {
@@ -17,15 +17,19 @@
 
 #play-button {
   width: 100%;
-  background-color: #603813;
-  border-color: #603813;
+  background-color: #3a4f5d;
+  border-color: #3a4f5d;
 }
 
 #play-button:hover {
-  border-color: #42210b;
+  border-color: #3a4f5d;
 }
 
 #username-input:focus {
-  border-color: #42210b;
-  box-shadow: 0 0 0 0.2rem rgba(66, 33, 11, 0.25);
+  border-color: #3a4f5d;
+}
+
+#play-logo {
+  max-width: 100%;
+  margin-bottom: 2em;
 }
