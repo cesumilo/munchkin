@@ -15,7 +15,7 @@ import { createRoom } from '../helpers/index'
  * @param {Room} room instance of the Room to join
  * @param {string} playerName name of the master player that has created the Room
  */
-export function joinRoom(socket, room, playerName) {
+export function joinRoom(socketServer, socket, room, playerName) {
   const player = new Player(playerName, socket, room);
 
   // Set a Room master if there is none or only join the Room
@@ -23,7 +23,7 @@ export function joinRoom(socket, room, playerName) {
     room.setMaster(player)
   else
     room.addPlayer(player)
-  
+
   // Handle player joining room
   socket.join(room.getName(), (err) => {
     if (err) return socket.emit("socket:error", `Unabled to join room ! Please contact the Administrator`);
@@ -38,7 +38,13 @@ export function joinRoom(socket, room, playerName) {
  * @param {SocketIO.Server} socketServer 
  */
 export function ROOM_MANAGEMENT(availableRooms, socket, socketServer) {
-  let connectionAttempt = 0;
+
+  /**
+   * Used to know what room is available
+   */
+  socket.on("server:rooms", () => {
+    socket.emit("server:rooms:availables", availableRooms.map(m => ({ name : m.getName(), takenSeats : `${m.getPlayers().length} / 6`})));
+  })
 
   /**
    * @param {string} payload.roomName represents the name of the Room to create
@@ -46,10 +52,14 @@ export function ROOM_MANAGEMENT(availableRooms, socket, socketServer) {
    */
   socket.on("room:create", payload => {
     if (!!payload.roomName) {
-      const newRoom = createRoom(socketServer, payload.roomName)
-      availableRooms.push(newRoom);
-      joinRoom(socket, newRoom, payload.playerName);
-      socket.emit("room:meesage", `You created ${newRoom.getName()}`);
+      if (availableRooms.some(r => r.getName() === payload.roomName)) {
+        return socket.emit("socket:error", "You can't create an already existing room !")
+      } else {
+        const newRoom = createRoom(socketServer, payload.roomName)
+        availableRooms.push(newRoom);
+        joinRoom(socketServer, socket, newRoom, payload.playerName);
+        socket.emit("room:meesage", `You created ${newRoom.getName()}`);
+      }
     } else {
       socket.emit("socket:error", "You must provide payload object with name of the room");
     }
@@ -58,8 +68,9 @@ export function ROOM_MANAGEMENT(availableRooms, socket, socketServer) {
   socket.on("room:join", payload => {
     // Finding the first room which is available
     const roomToJoin = availableRooms.find(room => room.canBeJoined() && room.getName() === payload.room.name);
-    if (!roomToJoin) socket.emit("socket:error", `No room available ! Try to create one !`);
-    joinRoom(roomToJoin);
+    if (!payload.playerName) socket.emit("socket:error", "You must provide a username to play the game");
+    else if (!roomToJoin) socket.emit("socket:error", `No room available ! Try to create one !`);
+    joinRoom(socketServer, socket, roomToJoin, payload.playerName);
   })
 
   /**
@@ -73,15 +84,20 @@ export function ROOM_MANAGEMENT(availableRooms, socket, socketServer) {
     else socket.emit("socket:error", `You must be the Room master to launch the game`);
   })
 
-
-  socket.on("disconnect", function () {
-    if (++connectionAttempt > 3) {
+  socket.on('reconnect_attempt', (attemptNumber) => {
+    if (attemptNumber > 3) {
       socket.leaveAll()
       socketServer.to(roomToJoin.getName()).emit('room:message', "Someone has internet connection issue !")
       roomToJoin.removePlayer(socket.id);
-      // TODO : Handle GAME Event (Charity PLEEEAAASSSEE !)
+    }
+  });
+
+  socket.on("disconnect", function (reason) {
+    socketServer.emit('server:message', "Someone has internet connection issue !")
+    if (reason === 'io server disconnect') {
+      socket.connect(); //When server trigger this, we can to reconnect manually
     } else {
-      //TODO : Reconnection attempt 
+      console.log(`[SERVER] #onDisconnect::reason => ${reason}`)
     }
   })
 

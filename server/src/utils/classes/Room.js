@@ -8,6 +8,7 @@
 import Game from "./Game";
 import Observer from "./others/Observer";
 import Stage from "./Stage";
+import Player from "./Player";
 
 export default class Room extends Observer {
   constructor(socketServer, name) {
@@ -98,7 +99,10 @@ export default class Room extends Observer {
     if (this._players.some(p => p.getID() === player.getID()))
       throw new Error(`You can't join twice to the room`)
     this._players.push(player)
-    this.subscribe(player, "player:ready", () => {
+    this.subscribe(player, "player:ready", (playerID) => {
+      if (this._players.some(p => p.getID() === playerID)) {
+        console.log("[ROOM] This man is crazy")
+      }
       if (this._players.length >= 3 && this._players.every(p => p.isReady()))
         this._master.getSocket().emit("room:state", "READY")
     })
@@ -108,6 +112,9 @@ export default class Room extends Observer {
     this.timeouts.forEach(timeout => clearTimeout(timeout))
   }
 
+  /**
+   * @returns {Array<Player>} returns all playing that has joined the room
+   */
   getPlayers() {
     return this._players;
   }

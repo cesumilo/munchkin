@@ -66,7 +66,7 @@ export default class Player extends Observable {
     switch (event.action) {
       case READY:
         this.updateReadiness(true);
-        this.publish("player:ready", null);
+        this.publish("player:ready", this.getID());
         if (!!event.payload && !!event.payload.username) {
           this._name = event.payload.username;
           this.sendAttributes();

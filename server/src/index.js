@@ -32,7 +32,7 @@ httpServer.listen(
   process.env.NODE_ENV === "production" ? process.env.PORT : 3000,
   () => {
     console.log(`[SERVER] Listen on http://127.0.0.1:3000`);
-    for (let i = 0; i < 3; i++) availableRooms.push(createRoom(socketServer));
+    for (let i = 0; i < 3; i++) availableRooms.push(createRoom(socketServer, `Room-${i}`));
     socketServer.on("connection", socket => ROOM_MANAGEMENT(availableRooms, socket, socketServer))
   }
 ) 
