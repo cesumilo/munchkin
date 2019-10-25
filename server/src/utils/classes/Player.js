@@ -6,7 +6,7 @@
  */
 
 import Card from "./Card";
-import { READY, UNREADY, PLAY_CARD, GIVE_CARD } from "../actions/Player";
+import { READY, PLAY_CARD } from "../actions/Player";
 import Observable from "./others/Observable";
 import Room from "./Room";
 import Stage from "./Stage";
@@ -40,6 +40,14 @@ export default class Player extends Observable {
    */
   getCurrentStage() {
     return this._currentStage;
+  }
+
+  triggerNextStage() {
+    this.publish("stage:next", null);
+  }
+
+  setCurrentStage(stage) {
+    this._currentStage = stage;
   }
 
   getSocket() {
@@ -89,7 +97,7 @@ export default class Player extends Observable {
 
   getAttributes() {
     return {
-      name:  this.getName(),
+      name: this.getName(),
       socketID: this.getID(),
       class: this._class,
       race: this._race,
@@ -116,11 +124,14 @@ export default class Player extends Observable {
     return this._lvl + this._equipments.reduce((a, c) => a + c.getValue(), 0);
   }
 
-  getCard(card) {
-    if (!(card instanceof Card))
-      throw new Error("card parameter must be a Card object");
-    if (card.hasEffect()) card.applyEffect(this);
-    this._cards.push(card);
+  /**
+   * 
+   * @param {Array<Card>} cards 
+   */
+  getCards(cards = []) {
+    cards.forEach(c => c.hasEffect() && c.applyEffect(this))
+    this._cards.push(cards);
+    return this._cards;
   }
 
   useCard(card, player = this) {

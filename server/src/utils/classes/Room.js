@@ -1,8 +1,3 @@
-import Game from "./Game";
-import Observer from "./others/Observer";
-import Player from "./Player";
-import Stage from "./Stage";
-
 /**
  * @author Alexandre SAISON <alexandre.saison@appi-conseil.com>
  * @file Description
@@ -10,31 +5,29 @@ import Stage from "./Stage";
  * @copyright APPI SASU
  */
 
+import Game from "./Game";
+import Observer from "./others/Observer";
+import Stage from "./Stage";
+
 export default class Room extends Observer {
-  constructor(index, socketServer) {
+  constructor(socketServer, name) {
     super();
     this._serverSocket = socketServer;
     this.timeouts = []
     this._game = new Game();
-    this._name = `Room${index}`;
+    this._name = name;
     this._players = [];
-    this._stages = [];
     this._master = null;
   }
 
   /**
-   * Trigger Stage for Player
-   * @param {Player} player 
-   * @param {Stage} stage
+   * 
+   * @param {Array<Room>} rooms 
+   * @param {string} roomName 
+   * @param {string} masterID 
    */
-  triggerStageFor(player, stage) {
-    const currentStage = player.getCurrentStage();
-    if (!!currentStage) {
-
-    } else {
-      console.log("[ROOM] This is the First Stage")
-      // TODO : HANDLE FIRST STAGE
-    }
+  static getRoom(rooms, roomName) {
+    return rooms.find(r => r.getName() === roomName);
   }
 
   getName() {
@@ -50,6 +43,10 @@ export default class Room extends Observer {
     return (!this._master || this._players.length <= 6) && !this._game.isLaunched();
   }
 
+  isMaster(potentialMasterId) {
+    return this.getMaster() === potentialMasterId;
+  }
+
   /**
    * @returns {string} return the SocketID of the Master
    */
@@ -57,8 +54,27 @@ export default class Room extends Observer {
     return this._master && this._master.getID();
   }
 
+  getRoomMaster() {
+    return player
+  }
+
   startGame() {
-    this._game.startGame(this._players);
+    const state = (function toggleSecond(game, players, counter = 3) {
+      if (counter > 0) {
+        this._serverSocket.to(this._name).emit("game:countdown", counter);
+        return setTimeout(() => toggleSecond(counter - 1), 1000);
+      }
+      return game._isLaunched && game.startGame(player);
+    })(this._game, this._players, launchCounter)
+    if(state instanceof Stage) {
+      this.addStage(state);
+    } else { 
+      console.log('[ROOM] state of the room => ', state);
+    }
+  }
+
+  addStage(stage) {
+    this._stages.push(stage);
   }
 
   endGame() {
@@ -69,15 +85,11 @@ export default class Room extends Observer {
   removePlayer(playerID) {
     const playerToRemove = this.findPlayer(playerID)
     if (!!playerToRemove) {
-      console.log(`[ROOM] BEFORE #playerRemove::players_length =>  ${this._players.length}`)
       this._players = this._players.filter(p => p.getID() !== playerToRemove.getID());
-      console.log(`[ROOM] AFTER #playerRemove::players_length =>  ${this._players.length}`)
     }
-    console.log('[ROOM] getEvent !!! ', this._players.map(p => ({ name: p.getName(), isReady: p.isReady() })))
   }
 
   findPlayer(player) {
-    console.log('[ROOM] #findPlayer::player =>  ', player)
     return this._players.find(p => p.getID() === player);
   }
 
@@ -87,15 +99,8 @@ export default class Room extends Observer {
       throw new Error(`You can't join twice to the room`)
     this._players.push(player)
     this.subscribe(player, "player:ready", () => {
-      if (this._players.length >= 3 && this._players.every(p => p.isReady())) {
-        const toggleSecond = (counter = 3) => {
-          if (counter > 0) {
-            this._serverSocket.to(this._name).emit("game:countdown", counter);
-            return setTimeout(() => toggleSecond(counter - 1), 1000);
-          }
-          return this.startGame();
-        }
-      }
+      if (this._players.length >= 3 && this._players.every(p => p.isReady()))
+        this._master.getSocket().emit("room:state", "READY")
     })
   }
 

@@ -8,6 +8,12 @@
 import Room from "../classes/Room"
 
 let indexRoomToCreate = 0;
-export const createRoom = (socketServer) => {
-  return new Room(++indexRoomToCreate, socketServer);
+
+/**
+ * Helper to create a Room 
+ * @param {SocketIO.Server} socketServer 
+ * @param {string} name name of the room to create
+ */
+export const createRoom = (socketServer, name = `Room-${indexRoomToCreate}`) => {
+  return new Room(socketServer, name);
 }

@@ -10,11 +10,9 @@ var _socket = _interopRequireDefault(require("socket.io"));
 
 var _http = _interopRequireDefault(require("http"));
 
-var _path = _interopRequireDefault(require("path"));
-
 var _helpers = require("./utils/helpers");
 
-var _socketHandler = _interopRequireDefault(require("./utils/helpers/socketHandler"));
+var _socketHandler = require("./utils/helpers/socketHandler");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
@@ -38,12 +36,13 @@ expressServer.use(_express["default"]["static"]("public")); // TODO : Has to be 
 
 var availableRooms = [];
 httpServer.listen(process.env.NODE_ENV === "production" ? process.env.PORT : 3000, function () {
-  socketServer.on("connection", function (socket) {
-    for (var i = 0; i < 3; i++) {
-      availableRooms.push((0, _helpers.createRoom)(socketServer));
-    }
+  console.log("[SERVER] Listen on http://127.0.0.1:3000");
 
-    (0, _socketHandler["default"])(socketServer, socket, availableRooms);
-    console.log("[SERVER] Listen on http://127.0.0.1:3000");
+  for (var i = 0; i < 3; i++) {
+    availableRooms.push((0, _helpers.createRoom)(socketServer));
+  }
+
+  socketServer.on("connection", function (socket) {
+    return (0, _socketHandler.ROOM_MANAGEMENT)(availableRooms, socket, socketServer);
   });
 });

@@ -18,7 +18,13 @@ export default class Card {
   }
 
   toString() {
-    return `${this._type}:${this._title}`;
+    return {
+      name : this._title,
+      description : "",
+      strength : 12,
+      type : this._type,
+      imgURL : ["POSSIBLE:IMG:URL"]
+    }
   }
   /**
    *

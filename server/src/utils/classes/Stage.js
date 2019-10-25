@@ -1,7 +1,25 @@
+/**
+ * @author Alexandre SAISON <alexandre.saison@appi-conseil.com>
+ * @file Description
+ * @desc Created on 2019-10-25 11:17:43 pm
+ * @copyright APPI SASU
+ */
+
 import Player from "./Player";
+import { NEXT_STAGE, WAITING, PREPARATION } from '../actions/Stage';
 
 const SECOND = 1000;
 const MINUTE = 60 * SECOND;
+
+function defaultHandler(socket) {
+  console.log("[STAGE] enter in default Handler");
+  socket.emit("player:stage", {
+    action: WAITING,
+    payload : {
+      socketID: this._player.getSocket().id
+    }
+  })
+}
 
 export default class Stage {
 
@@ -18,10 +36,18 @@ export default class Stage {
     this._ttl = ttl;
   }
 
+  static createFirstStage(player) {
+    const primaryStage = new Stage(player, PREPARATION, null)
+  }
+
   /**
    * Handle Stage Loop
+   * @param {function} handler
    */
-  handleStage() {
+  handleStage(handler = defaultHandler) {
+    if (typeof handler !== "function")
+      throw new Error("handler must be a function");
+    handler.call(this);
     setTimeout(() => {
       if (!this._next instanceof Stage)
         throw new Error(`The next Stage must be an instance of Stage`)
@@ -36,7 +62,7 @@ export default class Stage {
     }
     const playerSocket = this._player.getSocket();
     playerSocket.emit("player:stage", {
-      type: "NEXT_STAGE",
+      action: NEXT_STAGE,
       payload: {
         socketID: playerSocket.id
       }

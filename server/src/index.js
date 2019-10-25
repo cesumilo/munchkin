@@ -9,11 +9,10 @@ import helm from "helmet";
 import cors from "cors";
 import io from "socket.io";
 import http from "http";
-import path from "path";
 
 // Helpers
 import { createRoom } from "./utils/helpers";
-import socketHandler from "./utils/helpers/socketHandler";
+import { ROOM_MANAGEMENT } from "./utils/helpers/socketHandler";
 
 // Application
 const expressServer = express();
@@ -32,11 +31,8 @@ const availableRooms = [];
 httpServer.listen(
   process.env.NODE_ENV === "production" ? process.env.PORT : 3000,
   () => {
-    socketServer.on("connection", socket => {
-      for (let i = 0; i < 3; i++) {
-        availableRooms.push(createRoom(socketServer));
-      }
-      socketHandler(socketServer, socket, availableRooms)
-      console.log(`[SERVER] Listen on http://127.0.0.1:3000`);
-    })
-}) 
+    console.log(`[SERVER] Listen on http://127.0.0.1:3000`);
+    for (let i = 0; i < 3; i++) availableRooms.push(createRoom(socketServer));
+    socketServer.on("connection", socket => ROOM_MANAGEMENT(availableRooms, socket, socketServer))
+  }
+) 
