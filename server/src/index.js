@@ -15,6 +15,7 @@ import { createRoom } from "./utils/helpers";
 import { ROOM_MANAGEMENT } from "./utils/helpers/socketHandler";
 
 // Application
+const availableRooms = [];
 const expressServer = express();
 const httpServer = http.createServer(expressServer);
 const socketServer = io(httpServer);
@@ -25,8 +26,9 @@ expressServer.use(cors());
 // Serve files
 expressServer.use(express.static("public"));
 
-// TODO : Has to be moved to initiator of the GameServer
-const availableRooms = [];
+expressServer.get("/rooms", function (req, res) {
+  res.json(availableRooms);
+})
 
 httpServer.listen(
   process.env.NODE_ENV === "production" ? process.env.PORT : 3000,

@@ -1,13 +1,13 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { Container, Row, Col, Form, Button } from 'react-bootstrap';
+import { Container, Row, Col, Form, Button, } from 'react-bootstrap';
 import MunchkinLogo from '../img/Logos/munchkin-logo.png';
 
 import { playIsReady, playOnChangeUsername } from '../redux/actions/play';
 
 import '../css/Play.css';
 
-const Play = ({ usernameOnChange, play }) => (
+const Play = ({ usernameOnChange, play, availableRooms }) => (
   <Container className="full-page">
     <Row className="full-page game-background">
       <Col sm={4} />
@@ -21,6 +21,13 @@ const Play = ({ usernameOnChange, play }) => (
               placeholder="Enter your username"
               onChange={value => usernameOnChange(value.target.value)}
             />
+          </Form.Group>
+          <Form.Group controlId="formBasicRoomName">
+            <Form.Control as="select">
+              {availableRooms.forEach(room => {
+                return <options>{room.name} {room.takenSeat}/6 </options>
+              })}
+            </Form.Control>
           </Form.Group>
 
           <Button id="play-button" variant="primary" onClick={play}>

@@ -12,6 +12,7 @@ import {
 const initialState = {
   loading: false,
   username: null,
+  selectedRoom: ''
 };
 
 export const play = (state = initialState, { type, payload }) => {
@@ -20,6 +21,8 @@ export const play = (state = initialState, { type, payload }) => {
       return { ...state, loading: true };
     case PLAY_ON_CHANGE_USERNAME:
       return { ...state, username: payload };
+    case PLAY_ON_SELECT_ROOM:
+      return { ...state, selectedRoom: payload }
     default:
       return state;
   }
