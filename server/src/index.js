@@ -27,7 +27,7 @@ expressServer.use(cors());
 expressServer.use(express.static("public"));
 
 expressServer.get("/rooms", function (req, res) {
-  res.json(availableRooms);
+  res.json(availableRooms.map(m => ({ name : m.getName(), takenSeats : `${m.getPlayers().length} / 6`})));
 })
 
 httpServer.listen(

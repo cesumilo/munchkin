@@ -40,13 +40,6 @@ export function joinRoom(socketServer, socket, room, playerName) {
 export function ROOM_MANAGEMENT(availableRooms, socket, socketServer) {
 
   /**
-   * Used to know what room is available
-   */
-  socket.on("server:rooms", () => {
-    socket.emit("server:rooms:availables", availableRooms.map(m => ({ name : m.getName(), takenSeats : `${m.getPlayers().length} / 6`})));
-  })
-
-  /**
    * @param {string} payload.roomName represents the name of the Room to create
    * @param {string} payload.playerName represents the name of the Master to create with the Room
    */
@@ -70,7 +63,7 @@ export function ROOM_MANAGEMENT(availableRooms, socket, socketServer) {
     const roomToJoin = availableRooms.find(room => room.canBeJoined() && room.getName() === payload.room.name);
     if (!payload.playerName) socket.emit("socket:error", "You must provide a username to play the game");
     else if (!roomToJoin) socket.emit("socket:error", `No room available ! Try to create one !`);
-    joinRoom(socketServer, socket, roomToJoin, payload.playerName);
+    else joinRoom(socketServer, socket, roomToJoin, payload.playerName);
   })
 
   /**
