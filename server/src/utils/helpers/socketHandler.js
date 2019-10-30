@@ -60,6 +60,7 @@ export function ROOM_MANAGEMENT(availableRooms, socket, socketServer) {
 
   socket.on("room:join", payload => {
     // Finding the first room which is available
+    console.log(`[SERVER] room:join::payload => `, payload)
     const roomToJoin = availableRooms.find(room => room.canBeJoined() && room.getName() === payload.roomName);
     if (!payload.playerName || payload.playerName === "") socket.emit("socket:error", "You must provide a username to play the game");
     else if (!roomToJoin) socket.emit("socket:error", `No room available ! Try to create one !`);
