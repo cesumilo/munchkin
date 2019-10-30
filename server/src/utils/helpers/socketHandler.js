@@ -8,6 +8,7 @@
 import Player from '../classes/Player'
 import Room from '../classes/Room';
 import { createRoom } from '../helpers/index'
+import { unwatchFile } from 'fs';
 
 /**
  * 
@@ -76,26 +77,27 @@ export function ROOM_MANAGEMENT(availableRooms, socket, socketServer) {
   socket.on("game:start", payload => {
     const potentialRoom = Room.getRoom(availableRooms, payload.roomName)
     if (potentialRoom.isMaster(payload.socketID)) potentialRoom.startGame()
-    else socket.emit("socket:error", `You must be the Room master to launch the game`);
+    else socket.emit("socket:error", `Ola malheureux tu n'est pas le maitre du monde ni le maitre de la room ! Demande gentiment a ${potentialRoom._master.getName()}`);
   })
 
-  socket.on('reconnect_attempt', (attemptNumber) => {
-    if (attemptNumber > 3) {
-      socket.leaveAll()
-      socketServer.to(roomToJoin.getName()).emit('room:message', "Someone has internet connection issue !")
-      roomToJoin.removePlayer(socket.id);
-    }
-  });
-
   socket.on("disconnect", function (reason) {
-    socketServer.emit('server:message', "Someone has internet connection issue !")
     if (reason === 'io server disconnect') {
       socket.connect(); //When server trigger this, we can to reconnect manually
     } else {
       console.log(`[SERVER] #onDisconnect::reason => ${reason}`)
-      socket.leaveAll()
-      socketServer.to(roomToJoin.getName()).emit('room:message', "Someone has internet connection issue !")
-      roomToJoin.removePlayer(socket.id);
+      const supposedRooom = Room.getRoomWithSocketID(availableRooms, socket.id)
+      if (!!supposedRooom) {
+        console.log(`[SERVER] #onDisconnect::supposedRoom => `, supposedRooom);
+        const supposedPlayer = Player.getPlayerWithSocketID(supposedRooom, socket.id)
+        if (!!supposedPlayer) {
+          if (supposedRooom.isMaster(supposedPlayer.getID())) supposedRooom.endGame()
+          socketServer.to(supposedRooom.getName()).emit('room:message', `${supposedPlayer.getName()} a voulu prendre la fuite !`)
+        } else {
+          socketServer.to(supposedRooom.getName()).emit('room:message', "Quelqu'un a voulu prendre la fuite !")
+        }
+        socket.leaveAll()
+        supposedRooom.removePlayer(socket.id);
+      }
     }
   })
 

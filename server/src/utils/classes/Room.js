@@ -22,12 +22,20 @@ export default class Room extends Observer {
   }
 
   /**
-   * 
+   * Returns the room where socketID (The player) is located
+   * @param {Array<Room>} availableRooms 
+   * @param {string} socketID 
+   */
+  static getRoomWithSocketID(availableRooms, socketID) {
+    return availableRooms.find(room => room.getPlayers().some(player => player.getID() === socketID))
+  }
+
+  /**
+   * Returns the Room with specified name 
    * @param {Array<Room>} rooms 
    * @param {string} roomName 
-   * @param {string} masterID 
    */
-  static getRoom(rooms, roomName) {
+  static getRoomWithName(rooms, roomName) {
     return rooms.find(r => r.getName() === roomName);
   }
 
@@ -41,7 +49,7 @@ export default class Room extends Observer {
   }
 
   canBeJoined() {
-    return (!this._master || this._players.length <= 6) && !this._game.isLaunched();
+    return (!this._master || this._players.length < 6) && !this._game.isLaunched();
   }
 
   isMaster(potentialMasterId) {
@@ -67,9 +75,9 @@ export default class Room extends Observer {
       }
       return game._isLaunched && game.startGame(player);
     })(this._game, this._players, launchCounter)
-    if(state instanceof Stage) {
+    if (state instanceof Stage) {
       this.addStage(state);
-    } else { 
+    } else {
       console.log('[ROOM] state of the room => ', state);
     }
   }
@@ -80,7 +88,8 @@ export default class Room extends Observer {
 
   endGame() {
     // TODO : Must be called before removing the Room
-    this.destroy()
+    if (!!this._game) this.destroy()
+    else throw new Error('[ROOM] Game must have been started to be ended');
   }
 
   removePlayer(playerID) {

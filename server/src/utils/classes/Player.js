@@ -35,6 +35,15 @@ export default class Player extends Observable {
   }
 
   /**
+   * Get the supposed player using his socketID
+   * @param {Room} room the supposed Room where to find the player
+   * @param {string} socketID defined the socketID of the player to find
+   */
+  static getPlayerWithSocketID(room, socketID) {
+    return room.getPlayers().find(player => player.getID() === socketID)
+  }
+
+  /**
    * @returns {Stage} returns the current stage where the player is involved or null
    */
   getCurrentStage() {
