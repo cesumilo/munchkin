@@ -93,6 +93,9 @@ export function ROOM_MANAGEMENT(availableRooms, socket, socketServer) {
       socket.connect(); //When server trigger this, we can to reconnect manually
     } else {
       console.log(`[SERVER] #onDisconnect::reason => ${reason}`)
+      socket.leaveAll()
+      socketServer.to(roomToJoin.getName()).emit('room:message', "Someone has internet connection issue !")
+      roomToJoin.removePlayer(socket.id);
     }
   })
 
