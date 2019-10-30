@@ -1,6 +1,7 @@
 import '@babel/polyfill';
 import React from 'react';
 import { connect } from 'react-redux';
+import { Modal } from 'react-bootstrap';
 import Connecting from './Connecting.jsx';
 import Play from './Play.jsx';
 
@@ -9,10 +10,24 @@ import {
   appLoadSocketSuccess,
   appLoadSocketError,
   appPush,
+  appErrorModalClose,
+  appError,
 } from '../redux/actions/app';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '../css/shared.css';
+
+const ErrorHandler = ({ children, errorMessage, close }) => (
+  <div className="generic-container">
+    {children}
+    <Modal size="sm" centered show={errorMessage !== null} onHide={close}>
+      <Modal.Body>
+        <h4>Oops... 😰</h4>
+        <p>{errorMessage}</p>
+      </Modal.Body>
+    </Modal>
+  </div>
+);
 
 /**
  * #92784d Muesli (Light Brown)
@@ -23,7 +38,13 @@ import '../css/shared.css';
  */
 class App extends React.Component {
   componentDidMount() {
-    const { requestSocket, storeSocket, socketError, push } = this.props;
+    const {
+      requestSocket,
+      storeSocket,
+      socketError,
+      push,
+      logError,
+    } = this.props;
 
     // Notify connection attempt.
     requestSocket();
@@ -32,6 +53,7 @@ class App extends React.Component {
     socket.on('error', err => socketError(err));
     socket.on('connect_error', err => socketError(err));
     socket.on('connect_timeout', () => socketError('Connection timeout'));
+    socket.on('socket:error', err => logError(err));
     socket.on('connect', () => {
       storeSocket(socket);
       push(<Play />);
@@ -40,9 +62,23 @@ class App extends React.Component {
 
   render() {
     if (!this.props.component) {
-      return <Connecting />;
+      return (
+        <ErrorHandler
+          close={this.props.closeModal}
+          errorMessage={this.props.errorMessage}
+        >
+          <Connecting />
+        </ErrorHandler>
+      );
     }
-    return this.props.component;
+    return (
+      <ErrorHandler
+        close={this.props.closeModal}
+        errorMessage={this.props.errorMessage}
+      >
+        {this.props.component}
+      </ErrorHandler>
+    );
   }
 }
 
@@ -50,6 +86,7 @@ const mapStateToProps = (state, ownProps) => {
   return {
     ...ownProps,
     component: state.app.stack.length > 0 ? state.app.stack[0] : null,
+    errorMessage: state.app.errorMessage,
   };
 };
 
@@ -59,6 +96,8 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     storeSocket: socket => dispatch(appLoadSocketSuccess(socket)),
     socketError: err => dispatch(appLoadSocketError(err)),
     push: item => dispatch(appPush(item)),
+    closeModal: () => dispatch(appErrorModalClose()),
+    logError: err => dispatch(appError(err)),
   };
 };
 

@@ -24,6 +24,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "d
  */
 // Helpers
 // Application
+var availableRooms = [];
 var expressServer = (0, _express["default"])();
 
 var httpServer = _http["default"].createServer(expressServer);
@@ -32,9 +33,15 @@ var socketServer = (0, _socket["default"])(httpServer);
 expressServer.use((0, _helmet["default"])());
 expressServer.use((0, _cors["default"])()); // Serve files
 
-expressServer.use(_express["default"]["static"]("public")); // TODO : Has to be moved to initiator of the GameServer
-
-var availableRooms = [];
+expressServer.use(_express["default"]["static"]("public"));
+expressServer.get("/rooms", function (req, res) {
+  res.json(availableRooms.map(function (m) {
+    return {
+      name: m.getName(),
+      takenSeats: "".concat(m.getPlayers().length, " / 6")
+    };
+  }));
+});
 httpServer.listen(process.env.NODE_ENV === "production" ? process.env.PORT : 3000, function () {
   console.log("[SERVER] Listen on http://127.0.0.1:3000");
 

@@ -11,6 +11,9 @@ export const APP_LOAD_SOCKET_ERROR = 'APP_LOAD_SOCKET_ERROR';
 export const APP_PUSH = 'APP_PUSH';
 export const APP_POP = 'APP_POP';
 
+export const APP_ERROR = 'APP_ERROR';
+export const APP_ERROR_MODAL_CLOSE = 'APP_ERROR_MODAL_CLOSE';
+
 export const appPush = component => ({
   type: APP_PUSH,
   payload: component,
@@ -31,6 +34,16 @@ export const appLoadSocketSuccess = socket => ({
 
 export const appLoadSocketError = err => ({
   type: APP_LOAD_SOCKET_ERROR,
+  error: true,
+  payload: err,
+});
+
+export const appErrorModalClose = () => ({
+  type: APP_ERROR_MODAL_CLOSE,
+});
+
+export const appError = err => ({
+  type: APP_ERROR,
   error: true,
   payload: err,
 });

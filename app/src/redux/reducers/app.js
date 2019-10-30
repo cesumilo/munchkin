@@ -10,6 +10,8 @@ import {
   APP_LOAD_SOCKET_SUCCESS,
   APP_POP,
   APP_PUSH,
+  APP_ERROR_MODAL_CLOSE,
+  APP_ERROR,
 } from '../actions/app';
 
 const initialState = {
@@ -21,6 +23,8 @@ const initialState = {
 
 export const app = (state = initialState, { type, payload }) => {
   switch (type) {
+    case APP_ERROR_MODAL_CLOSE:
+      return { ...state, errorMessage: null };
     case APP_PUSH:
       return { ...state, stack: [payload].concat(state.stack) };
     case APP_POP:
@@ -29,12 +33,26 @@ export const app = (state = initialState, { type, payload }) => {
         stack: state.stack.slice(1),
       };
     case APP_LOAD_SOCKET_REQUEST:
-      return { ...state, connecting: true };
+      return { ...state, connecting: true, errorMessage: null };
     case APP_LOAD_SOCKET_SUCCESS:
-      return { ...state, connecting: false, socket: payload };
+      return {
+        ...state,
+        connecting: false,
+        socket: payload,
+        errorMessage: null,
+      };
     case APP_LOAD_SOCKET_ERROR:
-      console.log(payload);
-      return { ...state, connecting: false, socket: null, error: payload };
+      return {
+        ...state,
+        connecting: false,
+        socket: null,
+        errorMessage: payload,
+      };
+    case APP_ERROR:
+      return {
+        ...state,
+        errorMessage: payload,
+      };
     default:
       return state;
   }
