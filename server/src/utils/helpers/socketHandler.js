@@ -27,6 +27,7 @@ export function joinRoom(socketServer, socket, room, playerName) {
   // Handle player joining room
   socket.join(room.getName(), (err) => {
     if (err) return socket.emit("socket:error", `Unabled to join room ! Please contact the Administrator`);
+    player.getSocket().emit("room:joined", room.getName());
     socketServer.to(room.getName()).emit("room:message", "Someone joined the ROOM !")
   })
 }
@@ -54,7 +55,7 @@ export function ROOM_MANAGEMENT(availableRooms, socket, socketServer) {
         socket.emit("room:meesage", `You created ${newRoom.getName()}`);
       }
     } else {
-      socket.emit("socket:error", "You must provide payload object with name of the room");
+      socket.emit("socket:error", "You must provide payload object with name of the room", true);
     }
   })
 
@@ -62,7 +63,7 @@ export function ROOM_MANAGEMENT(availableRooms, socket, socketServer) {
     // Finding the first room which is available
     console.log(`[SERVER] room:join::payload => `, payload)
     const roomToJoin = availableRooms.find(room => room.canBeJoined() && room.getName() === payload.roomName);
-    if (!payload.playerName || payload.playerName === "") socket.emit("socket:error", "You must provide a username to play the game");
+    if (!payload.playerName || payload.playerName === "") socket.emit("socket:error", "You must provide a username to play the game", true);
     else if (!roomToJoin) socket.emit("socket:error", `No room available ! Try to create one !`);
     else joinRoom(socketServer, socket, roomToJoin, payload.playerName);
   })
