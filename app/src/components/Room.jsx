@@ -1,10 +1,10 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import {
   Container,
   Row,
   Col,
   ListGroup,
-  Badge,
   InputGroup,
   FormControl,
   Button,
@@ -17,23 +17,15 @@ import '../css/Room.css';
 const Ready = () => <div className="player-status player-ready" />;
 const NotReady = () => <div className="player-status player-not-ready" />;
 
-export default () => (
+const Room = ({ selectedRoom }) => (
   <Container className="full-page">
-    <Row
-      className="full-page game-background"
-      style={{
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        justifyContent: 'center',
-      }}
-    >
-      <Row style={{ height: '20%', width: '100%' }} />
-      <Row style={{ height: '10%', width: '100%' }}>
+    <Row id="room-container" className="full-page game-background">
+      <Row className="room-upper-part" />
+      <Row className="room-info">
         <Col sm={12}>
-          <Row style={{ width: '100%', height: '100%', color: 'white' }}>
+          <Row className="room-title">
             <Col sm={10}>
-              <h2>Room-1</h2>
+              <h2>{selectedRoom}</h2>
             </Col>
             <Col sm={2}>
               <h3>1 / 6</h3>
@@ -42,22 +34,12 @@ export default () => (
         </Col>
       </Row>
       <Row
+        className="chat-container"
         style={{
-          height: '40%',
-          width: '100%',
           backgroundImage: `url(${Background})`,
-          backgroundSize: 'cover',
-          paddingTop: '25px',
-          paddingBottom: '25px'
         }}
       >
-        <Col
-          sm={9}
-          style={{
-            overflow: 'hidden',
-            borderRight: '1px solid rgba(0,0,0,.125)'
-          }}
-        >
+        <Col className="col-sm-9 chat-room">
           <ListGroup id="room-chat" variant="flush">
             <ListGroup.Item className="chat-item">
               Alexandre: Cras justo odio
@@ -96,7 +78,7 @@ export default () => (
           </ListGroup>
         </Col>
       </Row>
-      <Row style={{ height: '10%', width: '100%' }}>
+      <Row className="chat-inputs">
         <Col className="col-sm-12 chat-input">
           <InputGroup>
             <FormControl
@@ -117,3 +99,19 @@ export default () => (
     </Row>
   </Container>
 );
+
+const mapStateToProps = (state, ownProps) => {
+  return {
+    ...ownProps,
+    selectedRoom: state.play.selectedRoom
+  };
+};
+
+const mapDispatchToProps = (dispatch, ownProps) => {
+  return {};
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Room);
