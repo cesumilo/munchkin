@@ -112,12 +112,16 @@ export default class Room extends Observer {
     return this._players.find(p => p.getID() === player);
   }
 
+
+  /**
+   * @param {Player} player 
+   */
   addPlayer(player) {
     console.log(`[ROOM] #addPlayer::player => ${player.getName()}`)
     if (this._players.some(p => p.getID() === player.getID()))
       throw new Error(`You can't join twice to the room`)
     this._players.push(player)
-    this.getServerSocket().emit("room:update", { players: this.getPlayers() })
+    this.getServerSocket().to(this.getName()).emit("room:update", { players: this.getPlayers() })
     this.subscribe(player, "player:ready", (playerID) => {
       if (this._players.some(p => p.getID() === playerID)) {
         console.log("[ROOM] This man is crazy")
@@ -135,6 +139,7 @@ export default class Room extends Observer {
    * @returns {Array<Player>} returns all playing that has joined the room
    */
   getPlayers() {
+    console.log("[ROOM] players => ", this._players)
     return this._players.map(p => ({ isReady: p.isReady(), name: p.getName() }));
   }
 }
