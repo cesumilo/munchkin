@@ -96,7 +96,6 @@ export default class Room extends Observer {
   }
 
   endGame() {
-    // TODO : Must be called before removing the Room
     if (!!this._game) this.destroy()
     else throw new Error('[ROOM] Game must have been started to be ended');
   }
@@ -111,7 +110,6 @@ export default class Room extends Observer {
   findPlayer(player) {
     return this._players.find(p => p.getID() === player);
   }
-
 
   /**
    * @param {Player} player 
@@ -139,7 +137,6 @@ export default class Room extends Observer {
    * @returns {Array<Player>} returns all playing that has joined the room
    */
   getPlayers() {
-    console.log("[ROOM] players => ", this._players)
     return this._players.map(p => ({ isReady: p.isReady(), name: p.getName() }));
   }
 }

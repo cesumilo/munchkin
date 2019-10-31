@@ -29,6 +29,7 @@ export function joinRoom(socketServer, socket, room, playerName) {
   socket.join(room.getName(), (err) => {
     if (err) return socket.emit("socket:error", `Unabled to join room ! Please contact the Administrator`);
     player.getSocket().emit("room:joined", room.getName());
+    player.getSocket().emit("room:update", { players: room.getPlayers() })
     socketServer.to(room.getName()).emit("room:message", `${player.getName()} joined the room !`)
   })
 }
