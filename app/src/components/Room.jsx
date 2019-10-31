@@ -5,6 +5,7 @@ import {
   Row,
   Col,
   ListGroup,
+  Badge,
   InputGroup,
   FormControl,
   Button,
