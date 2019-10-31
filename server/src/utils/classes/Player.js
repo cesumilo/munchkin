@@ -121,10 +121,6 @@ export default class Player extends Observable {
 
   updateReadiness(ready) {
     this._ready = ready;
-    this._socket.emit(
-      "room:message",
-      `You are ${this._ready ? "" : "not"} ready`
-    );
   }
 
   getStrength() {

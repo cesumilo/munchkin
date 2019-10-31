@@ -30,7 +30,7 @@ export function joinRoom(socketServer, socket, room, playerName) {
     if (err) return socket.emit("socket:error", `Unabled to join room ! Please contact the Administrator`);
     player.getSocket().emit("room:joined", room.getName());
     player.getSocket().emit("room:update", { players: room.getPlayers() })
-    socketServer.to(room.getName()).emit("room:message", `${player.getName()} joined the room !`)
+    socketServer.to(room.getName()).emit("room:message", { origin: "appi.systems", message: `${player.getName()} joined the room !` })
   })
 }
 
@@ -54,7 +54,7 @@ export function ROOM_MANAGEMENT(availableRooms, socket, socketServer) {
         const newRoom = createRoom(socketServer, payload.roomName)
         availableRooms.push(newRoom);
         joinRoom(socketServer, socket, newRoom, payload.playerName);
-        socket.emit("room:meesage", `You created ${newRoom.getName()}`);
+        socket.emit("room:meesage", { origin: 'appi.systems', message: `You created ${newRoom.getName()}` });
       }
     } else {
       socket.emit("socket:error", "You must provide payload object with name of the room", true);
@@ -92,9 +92,9 @@ export function ROOM_MANAGEMENT(availableRooms, socket, socketServer) {
         const supposedPlayer = Player.getPlayerWithSocketID(supposedRooom, socket.id)
         if (!!supposedPlayer) {
           if (supposedRooom.isMaster(supposedPlayer.getID())) supposedRooom.endGame()
-          socketServer.to(supposedRooom.getName()).emit('room:message', `${supposedPlayer.getName()} a voulu prendre la fuite !`)
+          socketServer.to(supposedRooom.getName()).emit('room:message', { origin: 'appi.systems', message: `${supposedPlayer.getName()} a voulu prendre la fuite !` })
         } else {
-          socketServer.to(supposedRooom.getName()).emit('room:message', "Quelqu'un a voulu prendre la fuite !")
+          socketServer.to(supposedRooom.getName()).emit('room:message', { origin: 'appi.systems', message: "Quelqu'un a voulu prendre la fuite !" })
         }
         socket.leaveAll()
         supposedRooom.removePlayer(socket.id);

@@ -120,7 +120,9 @@ export default class Room extends Observer {
       throw new Error(`You can't join twice to the room`)
     this._players.push(player)
     this.getServerSocket().to(this.getName()).emit("room:update", { players: this.getPlayers() })
+
     this.subscribe(player, "player:ready", (playerID) => {
+      this.getServerSocket().to(this.getName()).emit("room:update", { players: this.getPlayers() })
       if (this._players.some(p => p.getID() === playerID)) {
         console.log("[ROOM] This man is crazy")
       }
