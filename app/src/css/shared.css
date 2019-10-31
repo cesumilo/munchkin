@@ -8,3 +8,10 @@ font-family: 'Barlow Semi Condensed', sans-serif; (classic text)
   width: 100vw;
   background-color: black;
 }
+
+.generic-container {
+  width: inherit;
+  height: inherit;
+  margin: 0;
+  padding: 0;
+}
