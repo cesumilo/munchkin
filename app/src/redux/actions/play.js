@@ -6,6 +6,7 @@
  */
 import axios from 'axios';
 import { playerUpdate } from './player';
+import { roomUpdateInfo } from './room';
 
 export const PLAY_INIT = 'PLAY_INIT';
 
@@ -102,6 +103,7 @@ export const playIsReady = () => {
 
     socket.on('player:update', data => dispatch(playerUpdate(data)));
     socket.on('room:joined', () => dispatch(playRoomJoined()))
+    socket.on('room:count', data => dispatch(roomUpdateInfo(data)))
     socket.emit('room:join', { roomName: selectedRoom, playerName: username });
   };
 };

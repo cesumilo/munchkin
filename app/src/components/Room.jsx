@@ -14,10 +14,11 @@ import Background from '../img/Backgrounds/cards.png';
 
 import '../css/Room.css';
 
-const Ready = () => <div className="player-status player-ready" />;
-const NotReady = () => <div className="player-status player-not-ready" />;
+const PlayerStatus = status => (
+  <div className={`player-status player-${status ? '' : 'not-'}ready`} />
+);
 
-const Room = ({ selectedRoom }) => (
+const Room = ({ selectedRoom, players }) => (
   <Container className="full-page">
     <Row id="room-container" className="full-page game-background">
       <Row className="room-upper-part" />
@@ -28,7 +29,7 @@ const Room = ({ selectedRoom }) => (
               <h2>{selectedRoom}</h2>
             </Col>
             <Col sm={2}>
-              <h3>1 / 6</h3>
+              <h3>{players.length} / 6</h3>
             </Col>
           </Row>
         </Col>
@@ -57,24 +58,11 @@ const Room = ({ selectedRoom }) => (
         </Col>
         <Col sm={3}>
           <ListGroup id="room-players">
-            <ListGroup.Item>
-              <Ready /> Guillaume
-            </ListGroup.Item>
-            <ListGroup.Item>
-              <NotReady /> Alexandre
-            </ListGroup.Item>
-            <ListGroup.Item>
-              <NotReady /> Wilfried
-            </ListGroup.Item>
-            <ListGroup.Item>
-              <NotReady /> Zob
-            </ListGroup.Item>
-            <ListGroup.Item>
-              <NotReady /> Zob 2
-            </ListGroup.Item>
-            <ListGroup.Item>
-              <NotReady /> Zob 3
-            </ListGroup.Item>
+            {players.map(player => (
+              <ListGroup.Item>
+                <PlayerStatus status={player.isReady} /> {player.name}
+              </ListGroup.Item>
+            ))}
           </ListGroup>
         </Col>
       </Row>
@@ -103,7 +91,8 @@ const Room = ({ selectedRoom }) => (
 const mapStateToProps = (state, ownProps) => {
   return {
     ...ownProps,
-    selectedRoom: state.play.selectedRoom
+    selectedRoom: state.play.selectedRoom,
+    ...state.room,
   };
 };
 
