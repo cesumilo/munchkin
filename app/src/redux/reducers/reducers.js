@@ -8,5 +8,6 @@ import { combineReducers } from 'redux';
 import { app } from './app';
 import { play } from './play';
 import { player } from './player';
+import { room } from './room';
 
-export default combineReducers({ app, play, player });
+export default combineReducers({ app, play, player, room });

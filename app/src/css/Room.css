@@ -16,6 +16,10 @@ body {
 
 #room-chat {
   padding-left: 8px;
+  max-height: 100%;
+  overflow: scroll;
+  display: flex;
+  flex-direction: column-reverse;
 }
 
 #room-chat .list-group-item {
@@ -68,6 +72,10 @@ body {
   height: 20%;
   width: 100%;
 }
+.room-bottom-part {
+  height: 20%;
+  width: 100%;
+}
 
 .room-info {
   height: 10%;
@@ -91,6 +99,7 @@ body {
 .chat-room {
   overflow: hidden;
   border-right: 1px solid rgba(0,0,0,.125);
+  max-height: 100%;
 }
 
 .chat-inputs {

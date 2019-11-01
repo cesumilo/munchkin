@@ -5,7 +5,6 @@ import {
   Row,
   Col,
   ListGroup,
-  Badge,
   InputGroup,
   FormControl,
   Button,
@@ -13,13 +12,30 @@ import {
 
 import Background from '../img/Backgrounds/cards.png';
 
+import {
+  roomSendMessage,
+  roomSetMessage,
+  roomPlayerIsReady,
+  roomPlay,
+} from '../redux/actions/room';
+
 import '../css/Room.css';
 
-const PlayerStatus = status => (
+const PlayerStatus = ({ status }) => (
   <div className={`player-status player-${status ? '' : 'not-'}ready`} />
 );
 
-const Room = ({ selectedRoom, players }) => (
+const Room = ({
+  selectedRoom,
+  players,
+  messages,
+  sendMessage,
+  setMessage,
+  currentMessage,
+  ready,
+  canPlay,
+  play
+}) => (
   <Container className="full-page">
     <Row id="room-container" className="full-page game-background">
       <Row className="room-upper-part" />
@@ -43,18 +59,11 @@ const Room = ({ selectedRoom, players }) => (
       >
         <Col className="col-sm-9 chat-room">
           <ListGroup id="room-chat" variant="flush">
-            <ListGroup.Item className="chat-item">
-              Alexandre: Cras justo odio
-            </ListGroup.Item>
-            <ListGroup.Item className="chat-item">
-              Guillaume: Dapibus ac facilisis in
-            </ListGroup.Item>
-            <ListGroup.Item className="chat-item">
-              Wilfried: Morbi leo risus
-            </ListGroup.Item>
-            <ListGroup.Item className="chat-item">
-              Zob: Porta ac consectetur ac
-            </ListGroup.Item>
+            {messages.map(msg => (
+              <ListGroup.Item className="chat-item">
+                {msg.origin}: {msg.message}
+              </ListGroup.Item>
+            ))}
           </ListGroup>
         </Col>
         <Col sm={3}>
@@ -74,17 +83,28 @@ const Room = ({ selectedRoom, players }) => (
               type="text"
               placeholder="Votre message..."
               aria-label="Message"
+              onChange={value => setMessage(value.target.value)}
+              value={currentMessage ? currentMessage : ''}
             />
             <InputGroup.Append>
-              <Button variant="primary">Envoyer</Button>
+              <Button variant="primary" onClick={sendMessage}>
+                Envoyer
+              </Button>
             </InputGroup.Append>
             <InputGroup.Append>
-              <Button variant="warning">Prêt</Button>
+              <Button variant="warning" onClick={ready}>
+                Prêt
+              </Button>
+            </InputGroup.Append>
+            <InputGroup.Append>
+              <Button variant="success" disabled={!canPlay} onClick={play}>
+                Jouer
+              </Button>
             </InputGroup.Append>
           </InputGroup>
         </Col>
       </Row>
-      <Row style={{ height: '20%', width: '100%' }} />
+      <Row className="room-bottom-part" />
     </Row>
   </Container>
 );
@@ -98,7 +118,12 @@ const mapStateToProps = (state, ownProps) => {
 };
 
 const mapDispatchToProps = (dispatch, ownProps) => {
-  return {};
+  return {
+    sendMessage: () => dispatch(roomSendMessage()),
+    setMessage: msg => dispatch(roomSetMessage(msg)),
+    ready: () => dispatch(roomPlayerIsReady()),
+    play: () => dispatch(roomPlay()),
+  };
 };
 
 export default connect(

@@ -6,7 +6,7 @@
  */
 import axios from 'axios';
 import { playerUpdate } from './player';
-import { roomUpdateInfo } from './room';
+import { roomUpdateInfo, roomGetMessage, roomUpdateState } from './room';
 
 export const PLAY_INIT = 'PLAY_INIT';
 
@@ -21,7 +21,7 @@ export const PLAY_AVAILABLE_ROOM_FAILURE = 'PLAY_AVAILABLE_ROOM_FAILURE';
 export const PLAY_ROOM_JOINED = 'PLAY_ROOM_JOINED';
 
 export const playInit = () => ({
-  type: PLAY_INIT
+  type: PLAY_INIT,
 });
 
 export const playAvailableRoomRequest = () => ({
@@ -54,7 +54,7 @@ export const playIsReadyRequest = () => ({
 });
 
 export const playRoomJoined = () => ({
-  type: PLAY_ROOM_JOINED
+  type: PLAY_ROOM_JOINED,
 });
 
 /**
@@ -102,8 +102,10 @@ export const playIsReady = () => {
     dispatch(playIsReadyRequest());
 
     socket.on('player:update', data => dispatch(playerUpdate(data)));
-    socket.on('room:joined', () => dispatch(playRoomJoined()))
-    socket.on('room:count', data => dispatch(roomUpdateInfo(data)))
+    socket.on('room:joined', () => dispatch(playRoomJoined()));
+    socket.on('room:update', data => dispatch(roomUpdateInfo(data)));
+    socket.on('room:message', data => dispatch(roomGetMessage(data)));
+    socket.on('room:state', data => dispatch(roomUpdateState(data)));
     socket.emit('room:join', { roomName: selectedRoom, playerName: username });
   };
 };
