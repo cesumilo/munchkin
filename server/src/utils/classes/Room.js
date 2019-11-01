@@ -78,17 +78,18 @@ export default class Room extends Observer {
   }
 
   startGame() {
-    const state = (function toggleSecond(game, players, counter = 3) {
+    const state = (function toggleSecond(game, counter = 3) {
       if (counter > 0) {
-        this._serverSocket.to(this._name).emit("game:countdown", counter);
+        this._serverSocket.to(this._name).emit("room:message", { origin: "Server", message: `Début de la partie dans ${counter}...` });
         return setTimeout(() => toggleSecond(counter - 1), 1000);
       }
       return game._isLaunched && game.startGame(player);
-    })(this._game, this._players, launchCounter)
-    if (state instanceof Stage) {
+    })(this._game, launchCounter)
+    if (!!state && state instanceof Stage) {
       this.addStage(state);
     } else {
       console.log('[ROOM] state of the room => ', state);
+      this._serverSocket.to(this._name).emit("room:message", { origin: "Server", message: `Chouquette !!!` });
     }
   }
 
