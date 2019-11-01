@@ -48,7 +48,7 @@ export default class Room extends Observer {
   setMaster(master) {
     this._master = master;
     this._players.push(master);
-    this.listenerReady()
+    this.listenerReady(master)
   }
 
   canBeJoined() {
@@ -96,7 +96,7 @@ export default class Room extends Observer {
     this._stages.push(stage);
   }
 
-  listenerReady() {
+  listenerReady(player) {
     this.subscribe(player, "player:ready", (playerID) => {
       this.getServerSocket().to(this.getName()).emit("room:update", { players: this.getRoomPlayers() })
       if (this._players.some(p => p.getID() === playerID)) {
@@ -134,7 +134,7 @@ export default class Room extends Observer {
       throw new Error(`You can't join twice to the room`)
     this._players.push(player)
     this.getServerSocket().to(this.getName()).emit("room:update", { players: this.getRoomPlayers() })
-    this.listenerReady();
+    this.listenerReady(player);
   }
 
   destroy() {
