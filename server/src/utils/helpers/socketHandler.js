@@ -8,7 +8,6 @@
 import Player from '../classes/Player'
 import Room from '../classes/Room';
 import { createRoom } from '../helpers/index'
-import { unwatchFile } from 'fs';
 
 /**
  * 
@@ -72,7 +71,6 @@ export function ROOM_MANAGEMENT(availableRooms, socket, socketServer) {
   })
 
   socket.on("player:message", payload => {
-    console.log('player::payload => ', payload);
     socketServer.to(payload.roomName).emit("room:message", { origin: payload.name, message: payload.message })
   })
 

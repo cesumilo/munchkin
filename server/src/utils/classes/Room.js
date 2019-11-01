@@ -127,7 +127,9 @@ export default class Room extends Observer {
         console.log("[ROOM] This man is crazy")
       }
       if (this._players.length >= 3 && this._players.every(p => p.isReady()))
-        this._master.getSocket().emit("room:state", "READY")
+        this._master.getSocket().emit("room:state", "READY");
+      else
+        this._master.getSocket().emit("room:state", "NOT_READY");
     })
   }
 

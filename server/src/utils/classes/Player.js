@@ -76,12 +76,7 @@ export default class Player extends Observable {
       case READY:
         this.updateReadiness(true);
         this.publish("player:ready", this.getID());
-        if (!!event.payload && !!event.payload.username) {
-          this._name = event.payload.username;
-          this.sendAttributes();
-        } else {
-          this.sendError("You must provide a username to tell you're ready !")
-        }
+        this.sendAttributes();
         break;
       case PLAY_CARD:
         break;
