@@ -48,6 +48,7 @@ export default class Room extends Observer {
   setMaster(master) {
     this._master = master;
     this._players.push(master);
+    this.listenerReady()
   }
 
   canBeJoined() {
@@ -95,6 +96,19 @@ export default class Room extends Observer {
     this._stages.push(stage);
   }
 
+  listenerReady() {
+    this.subscribe(player, "player:ready", (playerID) => {
+      this.getServerSocket().to(this.getName()).emit("room:update", { players: this.getRoomPlayers() })
+      if (this._players.some(p => p.getID() === playerID)) {
+        console.log("[ROOM] This man is crazy")
+      }
+      if (this._players.length >= 3 && this._players.every(p => p.isReady()))
+        this._master.getSocket().emit("room:state", "READY");
+      else
+        this._master.getSocket().emit("room:state", "NOT_READY");
+    })
+  }
+
   endGame() {
     if (!!this._game) this.destroy()
     else throw new Error('[ROOM] Game must have been started to be ended');
@@ -120,17 +134,7 @@ export default class Room extends Observer {
       throw new Error(`You can't join twice to the room`)
     this._players.push(player)
     this.getServerSocket().to(this.getName()).emit("room:update", { players: this.getRoomPlayers() })
-
-    this.subscribe(player, "player:ready", (playerID) => {
-      this.getServerSocket().to(this.getName()).emit("room:update", { players: this.getRoomPlayers() })
-      if (this._players.some(p => p.getID() === playerID)) {
-        console.log("[ROOM] This man is crazy")
-      }
-      if (this._players.length >= 3 && this._players.every(p => p.isReady()))
-        this._master.getSocket().emit("room:state", "READY");
-      else
-        this._master.getSocket().emit("room:state", "NOT_READY");
-    })
+    this.listenerReady();
   }
 
   destroy() {
