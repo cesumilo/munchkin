@@ -106,6 +106,15 @@ export const playIsReady = () => {
 
     dispatch(playIsReadyRequest());
 
+    // Remove all listeners
+    socket.off('player:update');
+    socket.off('room:joined');
+    socket.off('room:update');
+    socket.off('room:message');
+    socket.off('room:state');
+    socket.off('game:begin');
+
+    // Set new listeners
     socket.on('player:update', data => dispatch(playerUpdate(data)));
 
     socket.on('room:joined', () => dispatch(playRoomJoined()));

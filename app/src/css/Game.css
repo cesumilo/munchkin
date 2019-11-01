@@ -4,6 +4,10 @@
  * @desc Created on 2019-10-16 12:04:27 am
  * @copyright GPL-3.0
  */
+.game-container {
+  background-color: #3A4F5D !important;
+}
+
 .ingame-desc {
   font-family: 'Barlow Semi Condensed', sans-serif;
 }

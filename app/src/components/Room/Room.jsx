@@ -27,7 +27,7 @@ class Room extends React.Component {
   }
   componentDidUpdate() {
     if (this.props.gameStarted) {
-      this.push(<Game />);
+      this.props.push(<Game />);
     }
   }
 
