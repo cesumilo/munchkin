@@ -16,7 +16,7 @@ import { createRoom } from '../helpers/index'
  * @param {string} playerName name of the master player that has created the Room
  */
 export function joinRoom(socketServer, socket, room, playerName) {
-  const player = new Player(playerName, socket, room);
+  const player = new Player(playerName, socket);
 
   // Set a Room master if there is none or only join the Room
   if (!room.getMaster())
@@ -62,7 +62,6 @@ export function ROOM_MANAGEMENT(availableRooms, socket, socketServer) {
 
   socket.on("room:join", payload => {
     // Finding the first room which is available
-    console.log(`[SERVER] room:join::payload => `, payload)
     const roomToJoin = availableRooms.find(room => room.canBeJoined() && room.getName() === payload.roomName);
     if (!payload.playerName || payload.playerName === "") socket.emit("socket:error", "You must provide a username to play the game", true);
     else if (!roomToJoin) socket.emit("socket:error", `No room available ! Try to create one !`);
@@ -89,10 +88,8 @@ export function ROOM_MANAGEMENT(availableRooms, socket, socketServer) {
     if (reason === 'io server disconnect') {
       socket.connect(); //When server trigger this, we can to reconnect manually
     } else {
-      console.log(`[SERVER] #onDisconnect::reason => ${reason}`)
       const supposedRooom = Room.getRoomWithSocketID(availableRooms, socket.id)
       if (!!supposedRooom) {
-        console.log(`[SERVER] #onDisconnect::supposedRoom => `, supposedRooom);
         const supposedPlayer = Player.getPlayerWithSocketID(supposedRooom, socket.id)
         if (!!supposedPlayer) {
           if (supposedRooom.isMaster(supposedPlayer.getID())) supposedRooom.endGame()

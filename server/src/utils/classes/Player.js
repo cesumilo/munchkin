@@ -6,21 +6,20 @@
  */
 
 import Card from "./Card";
-import { READY, PLAY_CARD } from "../actions/Player";
+import { READY, PLAY_CARD, DRAW_CARD } from "../actions/Player";
 import Observable from "./others/Observable";
 import Room from "./Room";
 import Stage from "./Stage";
+import { END_TURN } from "../actions/Stage";
 
 export default class Player extends Observable {
   /**
    *
    * @param {string} name
    * @param {SocketIO.Socket} socket
-   * @param {Room} room
    */
-  constructor(name, socket, room) {
+  constructor(name, socket) {
     super();
-    this._room = room;
     this._socket = socket;
     this._name = name;
     this._lvl = 1;
@@ -29,9 +28,18 @@ export default class Player extends Observable {
     this._cards = [];
     this._race = "Humain";
     this._class = "None";
+    this._speed = 0;
     this._currentStage = null;
     this._ready = false;
     this.waitForEvents();
+  }
+
+  /**
+   * 
+   * @param {string} race the new race of the Player
+   */
+  setRace(race) {
+    this._race = race;
   }
 
   /**
@@ -54,8 +62,13 @@ export default class Player extends Observable {
     this.publish("stage:next", null);
   }
 
-  setCurrentStage(stage) {
+  /**
+   * Set and apply the new stage
+   * @param {Stage} stage 
+   */
+  setCurrentStage(stage, handler = null) {
     this._currentStage = stage;
+    !!stage && stage.handleStage(handler)
   }
 
   getSocket() {
@@ -78,12 +91,10 @@ export default class Player extends Observable {
         this.publish("player:ready", this.getID());
         this.sendAttributes();
         break;
-      case PLAY_CARD:
+      case DRAW_CARD:
+        this.getCards(event.payload)
         break;
-      case FINISH_TURN:
-        if (this.canFinishLap()) {
-          // TODO : Handle update Stage
-        }
+      case PLAY_CARD:
         break;
       default:
     }
@@ -123,13 +134,11 @@ export default class Player extends Observable {
   }
 
   /**
-   * 
+   * Draw card function
    * @param {Array<Card>} cards 
    */
   getCards(cards = []) {
-    cards.forEach(c => c.hasEffect() && c.applyEffect(this))
     this._cards.push(cards);
-    return this._cards;
   }
 
   useCard(card, player = this) {
@@ -146,7 +155,9 @@ export default class Player extends Observable {
 
   canFinishLap() {
     const cardsLength = this._cards.length;
-    return this._race === "Nain" ? cardsLength <= 6 : cardsLength <= 5;
+    const isStageOK = !!this._currentStage && this._currentStage._name === END_TURN;
+    const isHandOK = this._race === "Nain" ? cardsLength <= 6 : cardsLength <= 5;
+    return isStageOK && isHandOK;
   }
 
   updateLevel(amount) {
@@ -166,9 +177,5 @@ export default class Player extends Observable {
 
   getName() {
     return this._name;
-  }
-
-  giveCard(card) {
-    // TODO : Handle this when socket.io
   }
 }

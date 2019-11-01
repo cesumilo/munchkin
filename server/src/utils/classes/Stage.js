@@ -15,7 +15,7 @@ function defaultHandler(socket) {
   console.log("[STAGE] enter in default Handler");
   socket.emit("player:stage", {
     action: WAITING,
-    payload : {
+    payload: {
       socketID: this._player.getSocket().id
     }
   })
@@ -34,10 +34,28 @@ export default class Stage {
     this._name = name;
     this._next = nextStage;
     this._ttl = ttl;
+    this.notifiyPlayer("stage:start", {
+      name: this._name,
+      ttl: this._ttl
+    })
   }
 
-  static createFirstStage(player) {
-    const primaryStage = new Stage(player, PREPARATION, null)
+  /**
+   * send event to 
+   * @param {string} evtName 
+   * @param {object} payload 
+   */
+  notifiyPlayer(evtName, payload) {
+    this._player.getSocket().emit(evtName, payload)
+  }
+
+  endStage() {
+    this.notifiyPlayer("stage:end", {
+      name: this._name,
+      next: this._next && this._next._name,
+      nextTTL: this._next._ttl
+    })
+    this._next && this._next.handleStage();
   }
 
   /**
@@ -47,11 +65,13 @@ export default class Stage {
   handleStage(handler = defaultHandler) {
     if (typeof handler !== "function")
       throw new Error("handler must be a function");
-    handler.call(this);
+    console.log("[LOG] ")
+    handler.bind(this)()
     setTimeout(() => {
-      if (!this._next instanceof Stage)
+      if (!this._next) this._player.publish("player:endturn", this._player.getID())
+      else if (!this._next instanceof Stage)
         throw new Error(`The next Stage must be an instance of Stage`)
-      if (!!this._next) return this.processNext(this._next);
+      else return this.processNext(this._next);
       console.log("[STAGE] Last stage has been triggered")
     }, this._ttl);
   }

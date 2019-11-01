@@ -74,23 +74,19 @@ export default class Room extends Observer {
   }
 
   getRoomMaster() {
-    return player
+    return this._master;
   }
 
   startGame() {
-    const state = (function toggleSecond(counter = 3) {
+    this._game.initGame(this._players);
+    (function toggleSecond(counter = 3) {
       if (counter > 0) {
         this._serverSocket.to(this._name).emit("room:message", { origin: "Server", message: `Début de la partie dans ${counter}...` });
         return setTimeout(() => toggleSecond.bind(this)(counter - 1), 1000);
       }
-      return this._game._isLaunched && this._game.startGame(player);
+      this._serverSocket.to(this._name).emit("game:begin");
+      return this._game.startGame(this._players, this._master);
     }).bind(this)()
-    if (!!state && state instanceof Stage) {
-      this.addStage(state);
-    } else {
-      console.log('[ROOM] state of the room => ', state);
-      this._serverSocket.to(this._name).emit("room:message", { origin: "Server", message: `Chouquette !!!` });
-    }
   }
 
   addStage(stage) {
@@ -98,15 +94,18 @@ export default class Room extends Observer {
   }
 
   listenerReady(player) {
-    this.subscribe(player, "player:ready", (playerID) => {
+    this.subscribe(player, "player:ready", () => {
       this.getServerSocket().to(this.getName()).emit("room:update", { players: this.getRoomPlayers() })
-      if (this._players.some(p => p.getID() === playerID)) {
-        console.log("[ROOM] This man is crazy")
-      }
       if (this._players.length >= 3 && this._players.every(p => p.isReady()))
         this._master.getSocket().emit("room:state", "READY");
       else
         this._master.getSocket().emit("room:state", "NOT_READY");
+    })
+  }
+
+  listenerEndTurn(player) {
+    this.subscribe(player, "player:endturn", (data) => {
+      // TODO : handle end of turn for data.player
     })
   }
 
@@ -130,7 +129,6 @@ export default class Room extends Observer {
    * @param {Player} player 
    */
   addPlayer(player) {
-    console.log(`[ROOM] #addPlayer::player => ${player.getName()}`)
     if (this._players.some(p => p.getID() === player.getID()))
       throw new Error(`You can't join twice to the room`)
     this._players.push(player)
