@@ -81,7 +81,7 @@ export default class Room extends Observer {
     const state = (function toggleSecond(counter = 3) {
       if (counter > 0) {
         this._serverSocket.to(this._name).emit("room:message", { origin: "Server", message: `Début de la partie dans ${counter}...` });
-        return setTimeout(() => toggleSecond(counter - 1), 1000);
+        return setTimeout(() => toggleSecond.bind(this)(counter - 1), 1000);
       }
       return this._game._isLaunched && this._game.startGame(player);
     }).bind(this)()
