@@ -81,7 +81,7 @@ export function ROOM_MANAGEMENT(availableRooms, socket, socketServer) {
    */
   socket.on("game:start", payload => {
     const potentialRoom = Room.getRoom(availableRooms, payload.roomName)
-    if (potentialRoom.isMaster(payload.socketID)) potentialRoom.startGame()
+    if (potentialRoom && potentialRoom.isMaster(socket.id)) potentialRoom.startGame()
     else socket.emit("socket:error", `Ola malheureux tu n'est pas le maitre du monde ni le maitre de la room ! Demande gentiment a ${potentialRoom._master.getName()}`);
   })
 
