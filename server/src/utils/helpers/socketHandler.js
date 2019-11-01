@@ -67,6 +67,7 @@ export function ROOM_MANAGEMENT(availableRooms, socket, socketServer) {
     const roomToJoin = availableRooms.find(room => room.canBeJoined() && room.getName() === payload.roomName);
     if (!payload.playerName || payload.playerName === "") socket.emit("socket:error", "You must provide a username to play the game", true);
     else if (!roomToJoin) socket.emit("socket:error", `No room available ! Try to create one !`);
+    else if (roomToJoin.getPlayers().some(p => p.getName() === payload.playerName)) socket.emit("socket:error", "Oh mince un des joueur vous a piquer votre nom ! Vengez vous, mais avec un autre nom !", true);
     else joinRoom(socketServer, socket, roomToJoin, payload.playerName);
   })
 
@@ -97,11 +98,12 @@ export function ROOM_MANAGEMENT(availableRooms, socket, socketServer) {
         const supposedPlayer = Player.getPlayerWithSocketID(supposedRooom, socket.id)
         if (!!supposedPlayer) {
           if (supposedRooom.isMaster(supposedPlayer.getID())) supposedRooom.endGame()
-          socketServer.to(supposedRooom.getName()).emit('room:message', { origin: 'Server', message: `${supposedPlayer.getName()} a voulu prendre la fuite !` })
+          socketServer.to(supposedRooom.getName()).emit('room:message', { origin: 'Server', message: `${supposedPlayer.getName()} a prit prendre la fuite !` })
         } else {
-          socketServer.to(supposedRooom.getName()).emit('room:message', { origin: 'Server', message: "Quelqu'un a voulu prendre la fuite !" })
+          socketServer.to(supposedRooom.getName()).emit('room:message', { origin: 'Server', message: "Quelqu'un a prit prendre la fuite !" })
         }
         socket.leaveAll()
+        socketServer.to(supposedRooom.getName()).emit("room:update", { players: supposedRooom.getRoomPlayers() })
         supposedRooom.removePlayer(socket.id);
       }
     }
