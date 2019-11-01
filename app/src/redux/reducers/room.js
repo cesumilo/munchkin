@@ -9,18 +9,25 @@ import {
   ROOM_GET_MESSAGE,
   ROOM_SET_MESSAGE,
   ROOM_SEND_MESSAGE,
-  ROOM_UPDATE_STATE
+  ROOM_UPDATE_STATE,
+  ROOM_INIT,
+  ROOM_START_GAME,
 } from '../actions/room';
 
 const initialState = {
   players: [],
   messages: [],
   currentMessage: null,
-  canPlay: false
+  canPlay: false,
+  gameStarted: false,
 };
 
 export const room = (state = initialState, { type, payload }) => {
   switch (type) {
+    case ROOM_INIT:
+      return initialState;
+    case ROOM_START_GAME:
+      return { ...state, gameStarted: true };
     case ROOM_UPDATE_INFO:
       return { ...state, players: payload.players };
     case ROOM_GET_MESSAGE:

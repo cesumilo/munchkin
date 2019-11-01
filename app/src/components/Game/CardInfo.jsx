@@ -1,7 +1,7 @@
 import React from 'react';
 import { Row, Col } from 'react-bootstrap';
 
-import '../css/CardInfo.css';
+import '../../css/CardInfo.css';
 
 const CardInfo = () => (
   <Row className="card-info-container">

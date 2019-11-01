@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Container, Row, Col, Form, Button } from 'react-bootstrap';
 import Skeleton from './Skeleton.jsx';
-import Room from './Room.jsx';
+import Room from './Room/Room.jsx';
 
 import MunchkinLogo from '../img/Logos/munchkin-logo.png';
 

@@ -1,9 +1,9 @@
 import React from 'react';
 import { Row, Col } from 'react-bootstrap';
 
-import Coins from '../img/Icons/coins.svg';
+import Coins from '../../img/Icons/coins.svg';
 
-import '../css/PlayerInfo.css';
+import '../../css/PlayerInfo.css';
 
 const PlayerInfo = () => (
   <Row className="player-info-container">

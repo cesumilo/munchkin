@@ -2,9 +2,9 @@ import React from 'react';
 import { Row } from 'react-bootstrap';
 import Card from './Card.jsx';
 
-import Background from '../img/Backgrounds/cards.png';
+import Background from '../../img/Backgrounds/cards.png';
 
-import '../css/Hand.css';
+import '../../css/Hand.css';
 
 const cardNumber = 5;
 const sm = Math.floor(12 / cardNumber);
