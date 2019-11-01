@@ -4,11 +4,21 @@
  * @desc Created on 2019-11-01 12:02:55 am
  * @copyright Creative Commons Attribution-NonCommercial 4.0 International License
  */
+export const ROOM_INIT = 'ROOM_INIT';
 export const ROOM_UPDATE_INFO = 'ROOM_UPDATE_INFO';
 export const ROOM_GET_MESSAGE = 'ROOM_GET_MESSAGE';
 export const ROOM_SEND_MESSAGE = 'ROOM_SEND_MESSAGE';
 export const ROOM_SET_MESSAGE = 'ROOM_SET_MESSAGE';
 export const ROOM_UPDATE_STATE = 'ROOM_UPDATE_STATE';
+export const ROOM_START_GAME = 'ROOM_START_GAME';
+
+export const roomInit = () => ({
+  type: ROOM_INIT,
+});
+
+export const roomStartGame = () => ({
+  type: ROOM_START_GAME,
+});
 
 export const roomUpdateInfo = data => ({
   type: ROOM_UPDATE_INFO,

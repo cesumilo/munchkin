@@ -1,14 +1,14 @@
 import React from 'react';
 import { Row, Col, OverlayTrigger, Tooltip } from 'react-bootstrap';
 
-import Helmet from '../img/Icons/helmet.svg';
-import Hand1 from '../img/Icons/hand-1.svg';
-import Hand2 from '../img/Icons/hand-2.svg';
-import Chest from '../img/Icons/chest.svg';
-import Boots from '../img/Icons/boots.svg';
-import Other from '../img/Icons/other-equipments.svg';
+import Helmet from '../../img/Icons/helmet.svg';
+import Hand1 from '../../img/Icons/hand-1.svg';
+import Hand2 from '../../img/Icons/hand-2.svg';
+import Chest from '../../img/Icons/chest.svg';
+import Boots from '../../img/Icons/boots.svg';
+import Other from '../../img/Icons/other-equipments.svg';
 
-import '../css/Equipments.css';
+import '../../css/Equipments.css';
 
 const Equipment = ({ component, desc }) => {
   const Component = component;

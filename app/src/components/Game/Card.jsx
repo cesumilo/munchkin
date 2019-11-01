@@ -2,9 +2,9 @@ import React from 'react';
 import { Col } from 'react-bootstrap';
 import PropTypes from 'prop-types';
 
-import '../css/Card.css';
+import '../../css/Card.css';
 
-import CardImgSrc from '../img/Dungeon/Amazone.jpg';
+import CardImgSrc from '../../img/Dungeon/Amazone.jpg';
 
 const Card = ({ sm }) => (
   <Col className={`col-sm-${sm} card-container`} sm={sm}>

@@ -4,11 +4,11 @@ import Equipments from './Equipments.jsx';
 import PlayerInfo from './PlayerInfo.jsx';
 import CardInfo from './CardInfo.jsx';
 
-import BackgroundClosed from '../img/Backgrounds/closed_doors.png';
-import BackgroundLeft from '../img/Backgrounds/left_side.png';
-import BackgroundRight from '../img/Backgrounds/right_side.png';
+import BackgroundClosed from '../../img/Backgrounds/closed_doors.png';
+import BackgroundLeft from '../../img/Backgrounds/left_side.png';
+import BackgroundRight from '../../img/Backgrounds/right_side.png';
 
-import '../css/GameBoard.css';
+import '../../css/GameBoard.css';
 
 const GameBoard = () => (
   <Row className="board">
