@@ -11,14 +11,13 @@ import Player from '../classes/Player';
 export default function generateCards() {
   return [
     new Donjon("Grenouilles Volantes", true, (...args) => {
-      console.log("ARGS =>", args);
+      // TODO : handle this Fight
     }),
     new Donjon("Voleur", true, (...args) => {
-      console.log("ARGS => ", args);
       if (args[0] instanceof Player) {
         const player = args[0];
         player.setRace("Voleur");
-        console.log("PLAYER => ", player)
+        player.sendAttributes();
       }
     })
   ]
