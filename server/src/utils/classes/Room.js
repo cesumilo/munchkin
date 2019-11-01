@@ -84,7 +84,7 @@ export default class Room extends Observer {
         return setTimeout(() => toggleSecond(counter - 1), 1000);
       }
       return game._isLaunched && game.startGame(player);
-    })(this._game, launchCounter)
+    })(this._game)
     if (!!state && state instanceof Stage) {
       this.addStage(state);
     } else {
