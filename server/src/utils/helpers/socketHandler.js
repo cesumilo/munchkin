@@ -98,7 +98,7 @@ export function ROOM_MANAGEMENT(availableRooms, socket, socketServer) {
           socketServer.to(supposedRooom.getName()).emit('room:message', { origin: 'Server', message: "Quelqu'un a prit prendre la fuite !" })
         }
         socket.leaveAll()
-        this.getServerSocket().to(this.getName()).emit("room:update", { players: this.getRoomPlayers() })
+        socketServer.to(this.getName()).emit("room:update", { players: this.getRoomPlayers() })
         socketServer.to(supposedRooom.getName()).emit("room:update", { players: supposedRooom.getRoomPlayers() })
         supposedRooom.removePlayer(socket.id);
       }
