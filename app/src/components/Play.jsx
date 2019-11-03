@@ -1,6 +1,8 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { Container, Row, Col, Form, Button } from 'react-bootstrap';
+import { BrowserView, MobileView } from 'react-device-detect';
+
 import Skeleton from './Skeleton.jsx';
 import Room from './Room/Room.jsx';
 
@@ -17,6 +19,102 @@ import { appPush } from '../redux/actions/app';
 
 import '../css/Play.css';
 
+const Mobile = ({
+  usernameOnChange,
+  play,
+  rooms,
+  fetchingRooms,
+  selectRoom,
+}) => (
+  <MobileView className="full-page">
+    <Row className="full-page game-background">
+      <Col sm={1} />
+      <Col sm={10} className="play-form-container">
+        <img src={MunchkinLogo} alt="munchkin logo" id="play-logo" />
+        <Form>
+          <Form.Group controlId="formBasicUsername">
+            <Form.Control
+              id="username-input"
+              type="text"
+              placeholder="Entrez votre pseudo"
+              onChange={value => usernameOnChange(value.target.value)}
+            />
+          </Form.Group>
+
+          <Skeleton loading={fetchingRooms}>
+            <Form.Group controlId="formBasicRoomName">
+              <Form.Control
+                as="select"
+                onChange={value => selectRoom(value.target.value.split(' ')[0])}
+              >
+                <option>Choisir...</option>
+                {rooms.map(room => (
+                  <option>
+                    {room.name} ({room.takenSeats})
+                  </option>
+                ))}
+              </Form.Control>
+            </Form.Group>
+          </Skeleton>
+
+          <Button id="play-button" variant="primary" onClick={play}>
+            Play
+          </Button>
+        </Form>
+      </Col>
+      <Col sm={1} />
+    </Row>
+  </MobileView>
+);
+
+const Browser = ({
+  usernameOnChange,
+  play,
+  rooms,
+  fetchingRooms,
+  selectRoom,
+}) => (
+  <BrowserView className="full-page">
+    <Row className="full-page game-background">
+      <Col sm={4} />
+      <Col sm={4} className="play-form-container">
+        <img src={MunchkinLogo} alt="munchkin logo" id="play-logo" />
+        <Form>
+          <Form.Group controlId="formBasicUsername">
+            <Form.Control
+              id="username-input"
+              type="text"
+              placeholder="Entrez votre pseudo"
+              onChange={value => usernameOnChange(value.target.value)}
+            />
+          </Form.Group>
+
+          <Skeleton loading={fetchingRooms}>
+            <Form.Group controlId="formBasicRoomName">
+              <Form.Control
+                as="select"
+                onChange={value => selectRoom(value.target.value.split(' ')[0])}
+              >
+                <option>Choisir...</option>
+                {rooms.map(room => (
+                  <option>
+                    {room.name} ({room.takenSeats})
+                  </option>
+                ))}
+              </Form.Control>
+            </Form.Group>
+          </Skeleton>
+
+          <Button id="play-button" variant="primary" onClick={play}>
+            Play
+          </Button>
+        </Form>
+      </Col>
+      <Col sm={4} />
+    </Row>
+  </BrowserView>
+);
+
 class Play extends React.Component {
   componentDidMount() {
     this.props.init();
@@ -30,55 +128,10 @@ class Play extends React.Component {
   }
 
   render() {
-    const {
-      usernameOnChange,
-      play,
-      rooms,
-      fetchingRooms,
-      selectRoom,
-    } = this.props;
-
     return (
-      <Container className="full-page">
-        <Row className="full-page game-background">
-          <Col sm={4} />
-          <Col sm={4} className="play-form-container">
-            <img src={MunchkinLogo} alt="munchkin logo" id="play-logo" />
-            <Form>
-              <Form.Group controlId="formBasicUsername">
-                <Form.Control
-                  id="username-input"
-                  type="text"
-                  placeholder="Entrez votre pseudo"
-                  onChange={value => usernameOnChange(value.target.value)}
-                />
-              </Form.Group>
-
-              <Skeleton loading={fetchingRooms}>
-                <Form.Group controlId="formBasicRoomName">
-                  <Form.Control
-                    as="select"
-                    onChange={value =>
-                      selectRoom(value.target.value.split(' ')[0])
-                    }
-                  >
-                    <option>Choisir...</option>
-                    {rooms.map(room => (
-                      <option>
-                        {room.name} ({room.takenSeats})
-                      </option>
-                    ))}
-                  </Form.Control>
-                </Form.Group>
-              </Skeleton>
-
-              <Button id="play-button" variant="primary" onClick={play}>
-                Play
-              </Button>
-            </Form>
-          </Col>
-          <Col sm={4} />
-        </Row>
+      <Container id="play-container" className="full-page">
+        <Browser {...this.props} />
+        <Mobile {...this.props} />
       </Container>
     );
   }

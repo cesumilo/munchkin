@@ -47,17 +47,18 @@ class App extends React.Component {
     } = this.props;
 
     // Notify connection attempt.
-    requestSocket();
+    //requestSocket();
 
-    const socket = io();
-    socket.on('error', err => socketError(err));
-    socket.on('connect_error', err => socketError(err));
-    socket.on('connect_timeout', () => socketError('Connection timeout'));
-    socket.on('socket:error', err => logError(err));
-    socket.on('connect', () => {
-      storeSocket(socket);
-      push(<Play />);
-    });
+    // const socket = io();
+    // socket.on('error', err => socketError(err));
+    // socket.on('connect_error', err => socketError(err));
+    // socket.on('connect_timeout', () => socketError('Connection timeout'));
+    // socket.on('socket:error', err => logError(err));
+    // socket.on('connect', () => {
+    //   storeSocket(socket);
+    //   push(<Play />);
+    // });
+    push(<Play />);
   }
 
   render() {
