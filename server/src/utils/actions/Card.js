@@ -1,0 +1,7 @@
+export const TYPE = {
+  MONSTER : "MONSTER", 
+  RACE : "RACE",
+  CLASS: "CLASS",
+  OBJECT: "OBJECT",
+  MALEDICTION: "MALEDICTION"
+}
