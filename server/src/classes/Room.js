@@ -89,10 +89,6 @@ export default class Room extends Observer {
     }).bind(this)()
   }
 
-  addStage(stage) {
-    this._stages.push(stage);
-  }
-
   listenerReady(player) {
     this.subscribe(player, "player:ready", () => {
       this.getServerSocket().to(this.getName()).emit("room:update", { players: this.getRoomPlayers() })
@@ -114,6 +110,10 @@ export default class Room extends Observer {
     else throw new Error('[ROOM] Game must have been started to be ended');
   }
 
+  /**
+   * Remove a Player from this room
+   * @param {string} playerID socket ID of the player to remove (used for findPlayer)
+   */
   removePlayer(playerID) {
     const playerToRemove = this.findPlayer(playerID)
     if (!!playerToRemove) {
@@ -121,11 +121,16 @@ export default class Room extends Observer {
     }
   }
 
-  findPlayer(player) {
-    return this._players.find(p => p.getID() === player);
+  /**
+   * Find a player using his socket ID 
+   * @param {string} playerID socketID related to the user (e.g player.getID())
+   */
+  findPlayer(playerID) {
+    return this._players.find(p => p.getID() === playerID);
   }
 
   /**
+   * Add a player to the room if fills requierments
    * @param {Player} player 
    */
   addPlayer(player) {

@@ -7,16 +7,25 @@
 
 import Card from "./Card";
 
+export function defaultEffect() {
+  console.warn("[LOG] enter defaultEffect");
+  return null;
+}
+
 export default class Donjon extends Card {
-  constructor(title, hasEffect, effect = () => null) {
-    super(title, "D");
+  constructor(title, hasEffect, effect = defaultEffect, typeName = "Donjon") {
+    super(title, typeName);
     this._hasEffect = hasEffect;
     this._effect = effect
   }
 
-  play(player) {
-    if(this._hasEffect) {
-      console.log("It has effect !")
+  /**
+   * Play the Card by Player
+   * @param {Player} player the player that play the card
+   * @param {boolean} firstStage to predict if it has to proc without player agreement.
+   */
+  play(player, firstStage) {
+    if (this._hasEffect && !firstStage) {
       this.applyEffect(player)
     } else return false;
   }

@@ -6,11 +6,12 @@
  */
 
 import Card from "./Card";
-import { READY, PLAY_CARD, DRAW_CARD } from "../actions/Player";
+import { READY, PLAY_CARD, DRAW_CARD } from "../utils/actions/Player";
 import Observable from "./others/Observable";
 import Room from "./Room";
 import Stage from "./Stage";
-import { END_TURN } from "../actions/Stage";
+import { END_TURN } from "../utils/actions/Stage";
+import Monster from "./donjons_cards/Monster";
 
 export default class Player extends Observable {
   /**
@@ -34,12 +35,24 @@ export default class Player extends Observable {
     this.waitForEvents();
   }
 
+  getLevel() {
+    return this._lvl;
+  }
+
   /**
-   * 
+   * This method can be called on Handler
    * @param {string} race the new race of the Player
    */
   setRace(race) {
     this._race = race;
+  }
+
+  /**
+   * This method can be called on Handler
+   * @param {string} classe the new  class of the Player
+   */
+  setClass(classe) {
+    this._cards = classe
   }
 
   /**
@@ -58,15 +71,18 @@ export default class Player extends Observable {
     return this._currentStage;
   }
 
-  triggerNextStage() {
-    this.publish("stage:next", null);
+  /**
+   * Send envent to the Event Queue, will be processed by the room
+   */
+  triggerNextStage(stage = null) {
+    this.publish("stage:next", stage);
   }
 
   /**
    * Set and apply the new stage
    * @param {Stage} stage 
    */
-  setCurrentStage(stage, handler = null) {
+  setCurrentStage(stage) {
     this._currentStage = stage;
     !!stage && stage.handleStage(handler)
   }
@@ -92,7 +108,13 @@ export default class Player extends Observable {
         this.sendAttributes();
         break;
       case DRAW_CARD:
-        this.getCards(event.payload)
+        if (typeof event.payload !== "number")
+          throw new Error("payload must be the number of cards to draw")
+        else if (this._cards.length - event.payload < 0)
+          throw new Error("you can't draw more cards than it already exists")
+        else {
+          this.getCards(event.payload)
+        }
         break;
       case PLAY_CARD:
         break;
@@ -104,10 +126,17 @@ export default class Player extends Observable {
     this.getSocket().emit("player:update", this.getAttributes());
   }
 
+  /**
+   * This method allow to send error to the related client
+   * @param {string} errorMessage the Error message string to send to the client
+   */
   sendError(errorMessage) {
     this.getSocket().emit("socket:error", errorMessage);
   }
 
+  /**
+   * @return {{name: string, sockerID: string, class: string, ready: boolean, cards: Array<Card>, lvl: string}}
+   */
   getAttributes() {
     return {
       name: this.getName(),
@@ -117,7 +146,7 @@ export default class Player extends Observable {
       ready: this._ready,
       cards: this._cards,
       lvl: this._lvl,
-      strength: this._strength
+      strength: this.getStrength()
     }
   }
 
@@ -139,18 +168,7 @@ export default class Player extends Observable {
    */
   getCards(cards = []) {
     this._cards.push(cards);
-  }
-
-  useCard(card, player = this) {
-    card.use(player);
-    this.getSocket().emit("player:useCard", {
-      level: this._lvl,
-      equipments: this._equipments,
-      strength: this.getStrength(),
-      race: this._race,
-      className: this._class,
-      cards: this._cards.map(c => c.constructor.name())
-    });
+    this.getSocket().emit("player:drawCard", this._cards)
   }
 
   canFinishLap() {
@@ -177,5 +195,13 @@ export default class Player extends Observable {
 
   getName() {
     return this._name;
+  }
+
+  /**
+   * Checks function to know if the player beat the monster
+   * @param {Monster} monstrer the monster to check if player can beat him
+   */
+  beat(monstrer) {
+    return this.getStrength() > monstrer.getStrength()
   }
 }

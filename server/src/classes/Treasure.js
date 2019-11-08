@@ -6,14 +6,14 @@
  */
 
 import Card, { IEffect } from "./Card";
-import { LEVEL_DOWN, LEVEL_UP, UPDATE_ATTR} from '../actions/Effect'
+import { LEVEL_DOWN, LEVEL_UP, UPDATE_ATTR} from '../utils/actions/Effect'
 import Player from "./Player";
 
 export default class Treasure extends Card {
 
   /**
-   * @param {string} title of the Card
-   * @param {string} type can be Ring / Buff / Stuff
+   * @param {string} title title of the Card
+   * @param {string} type type can be Ring / Buff / Stuff
    * @param {function} effect function that takes player as parametter to apply everything it needs
    * @param {function} condition function that takes player as parametter to know if it's usable 
    */
@@ -28,10 +28,10 @@ export default class Treasure extends Card {
    * Player will use the Card  
    * @param {Player} player 
    */
-  use(player) {
+  play(player) {
     if(this._condition(player)) {
-      this._effect(player)
-    }
+      this._effect.call(this, player)
+    } else throw Error("Your player does not fill conditions to play this card")
   }
 
 }
