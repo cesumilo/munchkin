@@ -5,8 +5,8 @@
  * @copyright APPI SASU
  */
 
-import Player from '../classes/Player'
-import Room from '../classes/Room';
+import Player from '../../classes/Player'
+import Room from '../../classes/Room';
 import { createRoom } from '../helpers/index'
 
 /**
@@ -98,7 +98,6 @@ export function ROOM_MANAGEMENT(availableRooms, socket, socketServer) {
           socketServer.to(supposedRooom.getName()).emit('room:message', { origin: 'Server', message: "Quelqu'un a prit prendre la fuite !" })
         }
         socket.leaveAll()
-        socketServer.to(this.getName()).emit("room:update", { players: this.getRoomPlayers() })
         socketServer.to(supposedRooom.getName()).emit("room:update", { players: supposedRooom.getRoomPlayers() })
         supposedRooom.removePlayer(socket.id);
       }

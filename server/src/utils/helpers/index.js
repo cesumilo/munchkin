@@ -5,7 +5,7 @@
  * @copyright APPI SASU
  */
 ``
-import Room from "../classes/Room"
+import Room from "../../classes/Room"
 
 let indexRoomToCreate = 0;
 
