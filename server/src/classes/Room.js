@@ -92,11 +92,18 @@ export default class Room extends Observer {
   listenerReady(player) {
     this.subscribe(player, "player:ready", () => {
       this.getServerSocket().to(this.getName()).emit("room:update", { players: this.getRoomPlayers() })
-      if (this._players.length >= 3 && this._players.every(p => p.isReady()))
+      if (this.canStartGame())
         this._master.getSocket().emit("room:state", "READY");
       else
         this._master.getSocket().emit("room:state", "NOT_READY");
     })
+  }
+
+  /**
+   * @returns {boolean} Checks to pass before master can launch the game
+   */
+  canStartGame() {
+    return this._players.length >= 1 && this._players.every(p => p.isReady());
   }
 
   listenerEndTurn(player) {

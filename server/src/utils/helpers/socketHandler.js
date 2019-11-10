@@ -10,7 +10,7 @@ import Room from '../../classes/Room';
 import { createRoom } from '../helpers/index'
 
 /**
- * 
+ * Used to handle player creation and makes him join the room
  * @param {SocketIO.Client} socket use to the Player instance
  * @param {Room} room instance of the Room to join
  * @param {string} playerName name of the master player that has created the Room
@@ -34,7 +34,7 @@ export function joinRoom(socketServer, socket, room, playerName) {
 }
 
 /**
- * 
+ * All room management
  * @param {Array<Room>} availableRooms 
  * @param {SocketIO.Socket} socket 
  * @param {SocketIO.Server} socketServer 
@@ -62,9 +62,11 @@ export function ROOM_MANAGEMENT(availableRooms, socket, socketServer) {
 
   socket.on("room:join", payload => {
     // Finding the first room which is available
-    const roomToJoin = availableRooms.find(room => room.canBeJoined() && room.getName() === payload.roomName);
-    if (!payload.playerName || payload.playerName === "") socket.emit("socket:error", "You must provide a username to play the game", true);
-    else if (!roomToJoin) socket.emit("socket:error", `No room available ! Try to create one !`);
+    if (!payload.playerName || payload.playerName === "")
+      socket.emit("socket:error", "You must provide a username to play the game", true);
+    const roomToJoin = availableRooms.find(room => room.getName() === payload.roomName);
+    if (!roomToJoin) socket.emit("socket:error", `No room available ! Try to create one !`);
+    else if (!roomToJoin.canBeJoined()) socket.emit("socket:error", `${roomToJoin.getName()} may be already launched or too many people are presents waiting to fight`);
     else if (roomToJoin.getPlayers().some(p => p.getName() === payload.playerName)) socket.emit("socket:error", "Oh mince un des joueur vous a piquer votre nom ! Vengez vous, mais avec un autre nom !", true);
     else joinRoom(socketServer, socket, roomToJoin, payload.playerName);
   })
@@ -93,9 +95,9 @@ export function ROOM_MANAGEMENT(availableRooms, socket, socketServer) {
         const supposedPlayer = Player.getPlayerWithSocketID(supposedRooom, socket.id)
         if (!!supposedPlayer) {
           if (supposedRooom.isMaster(supposedPlayer.getID())) supposedRooom.endGame()
-          socketServer.to(supposedRooom.getName()).emit('room:message', { origin: 'Server', message: `${supposedPlayer.getName()} a prit prendre la fuite !` })
+          socketServer.to(supposedRooom.getName()).emit('room:message', { origin: 'Server', message: `${supposedPlayer.getName()} a prit la fuite !` })
         } else {
-          socketServer.to(supposedRooom.getName()).emit('room:message', { origin: 'Server', message: "Quelqu'un a prit prendre la fuite !" })
+          socketServer.to(supposedRooom.getName()).emit('room:message', { origin: 'Server', message: "Quelqu'un a prit la fuite !" })
         }
         socket.leaveAll()
         socketServer.to(supposedRooom.getName()).emit("room:update", { players: supposedRooom.getRoomPlayers() })

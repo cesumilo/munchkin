@@ -36,8 +36,8 @@ export default class Stage {
   startStage() {
     if (!!this._handler && typeof this._handler === "function") {
       console.log(`[STAGE] ${this._name} Stage has been started for ${this._player.getName()} !`)
-      this.handleTTL();
-      return this._handler()
+      console.log('Handler => ', this._handler)
+      this.handleTTL()
     }
     else throw new Error("Handler must be a function");
   }

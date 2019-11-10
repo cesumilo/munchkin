@@ -42,6 +42,8 @@ export function drawCard(player, counter, availablesCards) {
  */
 function handleOpenDoor(player, availablesCards) {
   try {
+    console.log("[LOG] handleOpenDoor::player => ", player);
+    console.log("[LOG] handleOpenDoor::cards => ", availablesCards);
     const potentialCard = drawCard(player, 1, availablesCards);
     console.log(`${potentialCard.getName()} has been drawn by ${player.getName()}`)
     if (!!potentialCard && Array.isArray(potentialCard)) {
