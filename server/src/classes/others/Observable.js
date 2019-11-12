@@ -1,6 +1,6 @@
 /**
  * @author Alexandre SAISON <alexandre.saison@appi-conseil.com>
- * @file Description
+ * @file Observable Class
  * @desc Created on 2019-10-20 5:51:16 pm
  * @copyright APPI SASU
  */

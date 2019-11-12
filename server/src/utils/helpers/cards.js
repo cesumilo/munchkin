@@ -11,6 +11,7 @@ import PlayerClass from '../../classes/donjons_cards/Class';
 import PlayerRace from '../../classes/donjons_cards/Race';
 import LevelDown from '../../classes/treasure_cards/levelDown';
 import LevelUp from '../../classes/treasure_cards/levelUp';
+import Equipment from '../../classes/treasure_cards/Equipment';
 
 function shuffle(array) {
   for (let i = array.length - 1; i > 0; i--) {
@@ -26,12 +27,13 @@ export default function generateCards() {
       // TODO : handle this Fight
       console.log("[CARD] this card => ", this, args)
     }),
-    new PlayerRace("Nain", true, player => PlayerRace.handleChangePlayerRace(player, "Nain")),
-    new PlayerRace("Halfelin", true, player => PlayerRace.handleChangePlayerRace(player, "Halfelin")),
-    new PlayerClass("Voleur", true, player => PlayerClass.handleChangePlayerClass(player, "Voleur")),
-    new PlayerClass("Guerrier", true, player => PlayerClass.handleChangePlayerClass(player, "Guerrier")),
-    new PlayerClass("Magicien", true, player => PlayerClass.handleChangePlayerClass(player, "Magicien")),
-    new LevelUp("Pleurer dans les jupes du MJ", player => LevelUp.handleLevelUp(player), player => player.getLevel() < 9),
-    new LevelDown("Trahison !!", player => LevelDown.handleLevelDown(player), player => player.getLevel() < 9)
+    new PlayerRace("Nain", player => PlayerRace.handleChangePlayerRace(player, "Nain")),
+    new PlayerRace("Halfelin", player => PlayerRace.handleChangePlayerRace(player, "Halfelin")),
+    new PlayerClass("Voleur", player => PlayerClass.handleChangePlayerClass(player, "Voleur")),
+    new PlayerClass("Guerrier", player => PlayerClass.handleChangePlayerClass(player, "Guerrier")),
+    new PlayerClass("Magicien", player => PlayerClass.handleChangePlayerClass(player, "Magicien")),
+    new LevelUp("Pleurer dans les jupes du MJ", player => LevelUp.handleLevelUp(player)),
+    new LevelDown("Trahison !!", player => LevelDown.handleLevelDown(player)),
+    new Equipment("Epée qui donne du courage", player => Equipment.handleAddEquipment(player), () => true)
   ])
 }

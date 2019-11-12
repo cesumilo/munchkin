@@ -26,18 +26,6 @@ export default class Game extends Observer {
 
   /**
    * 
-   * @param {Player} player player that will draw cards
-   */
-  drawCard(player) {
-    if (player instanceof Player) {
-      const card = drawCard(player, 1, this._cards);
-      console.log('[LOG] card drawn => ', card)
-      return card
-    } else throw new Error("player must be a Player instance")
-  }
-
-  /**
-   * 
    * @param {Array<Player>} players 
    * @param {Player} master 
    */

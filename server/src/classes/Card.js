@@ -55,4 +55,8 @@ export default class Card {
     }
     return potentialCard;
   }
+
+  getName() {
+    return this._title;
+  }
 }

@@ -12,6 +12,7 @@ import Room from "./Room";
 import Stage from "./Stage";
 import { END_TURN } from "../utils/actions/Stage";
 import Monster from "./donjons_cards/Monster";
+import Equipment from "./treasure_cards/Equipment";
 
 export default class Player extends Observable {
   /**
@@ -84,7 +85,6 @@ export default class Player extends Observable {
    */
   setCurrentStage(stage) {
     this._currentStage = stage;
-    !!stage && stage.handleStage(handler)
   }
 
   getSocket() {
@@ -92,7 +92,7 @@ export default class Player extends Observable {
   }
 
   waitForEvents() {
-    this._socket.on("player:action", this.handleEvent.bind(this));
+    this.getSocket().on("player:action", this.handleEvent.bind(this));
   }
 
   /**
@@ -100,7 +100,6 @@ export default class Player extends Observable {
    * @param {object} event.payload payload to give to server
    */
   handleEvent(event) {
-    console.log("Received action => ", event);
     switch (event.action) {
       case READY:
         this.updateReadiness(true);
@@ -108,17 +107,11 @@ export default class Player extends Observable {
         this.sendAttributes();
         break;
       case DRAW_CARD:
-        if (typeof event.payload !== "number")
-          throw new Error("payload must be the number of cards to draw")
-        else if (this._cards.length - event.payload < 0)
-          throw new Error("you can't draw more cards than it already exists")
-        else {
-          this.getCards(event.payload)
-        }
-        break;
+        throw new Error("EVENT ACTION:DRAW_CARD : NOT_IMPLEMENTED_YET");
       case PLAY_CARD:
-        break;
+        throw new Error("EVENT ACTION:PLAYER_CARD : NOT_IMPLEMENTED_YET");
       default:
+        throw new Error("EVENT DEFAULT : event got unknown action");
     }
   }
 
@@ -163,12 +156,20 @@ export default class Player extends Observable {
   }
 
   /**
+   * @param {Equipment} equipment the equipment to add to the player
+   */
+  addEquiment(equipment) {
+    this._equipments.push(equipment)
+  }
+
+  /**
    * Draw card function
    * @param {Array<Card>} cards 
    */
   getCards(cards = []) {
-    this._cards.push(cards);
-    this.getSocket().emit("player:drawCard", this._cards)
+    this._cards.push(...cards)
+    this.getSocket().emit("player:drawCard", cards)
+    return this._cards;
   }
 
   canFinishLap() {
@@ -190,7 +191,7 @@ export default class Player extends Observable {
   }
 
   getID() {
-    return this._socket.id;
+    return this.getSocket() && this.getSocket().id;
   }
 
   getName() {

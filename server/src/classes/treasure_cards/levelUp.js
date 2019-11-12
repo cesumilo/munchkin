@@ -15,8 +15,8 @@ export default class LevelUp extends Treasure {
    * @param {(player) => void} effect effect to apply to a player
    * @param {(player) => boolean} condition conditions to check before applying the effect
    */
-  constructor(title, effect= defaultEffect, condition) {
-    super(title, effect, condition)
+  constructor(title, effect= defaultEffect) {
+    super(title, effect, (player) => player.getLevel() < 9)
   }
 
   /**
@@ -26,4 +26,6 @@ export default class LevelUp extends Treasure {
   static handleLevelUp(player) {
     player.updateLevel(1)
   }
+
+  
 }

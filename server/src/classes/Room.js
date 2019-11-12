@@ -11,6 +11,7 @@ import Stage from "./Stage";
 import Player from "./Player";
 
 import { Socket } from 'socket.io'
+import { sendMessageToRoom } from "../utils/helpers/socketHandler";
 
 export default class Room extends Observer {
   constructor(socketServer, name) {
@@ -41,8 +42,20 @@ export default class Room extends Observer {
     return rooms.find(r => r.getName() === roomName);
   }
 
+  /**
+   * @returns {string} returns the name of the Room
+   */
   getName() {
     return this._name;
+  }
+
+  /**
+   * Function used to know if a player already exists in the room with a specified name
+   * @param {string} playerName the player name who wants to join the room
+   * @returns {boolean} returns true if there already exists a player with this name
+   */
+  hasPlayerAlreadyExists(playerName) {
+    return this._players.some(p => p.getName() === playerName);
   }
 
   setMaster(master) {
@@ -51,10 +64,21 @@ export default class Room extends Observer {
     this.listenerReady(master)
   }
 
+  /**
+   * Function used to know if the room can be joined using rules bellow
+   * - There is no one in the room (no master)
+   * - There is less than 6 players in the room
+   * - The game is not launched
+   * @returns {boolean} returns true if the room can be joined
+   */
   canBeJoined() {
     return (!this._master || this._players.length < 6) && !this._game.isLaunched();
   }
 
+  /**
+   * Checks for existing master with socket id
+   * @param {string} potentialMasterId potential socket.id of the client that might be the master
+   */
   isMaster(potentialMasterId) {
     return this.getMaster() === potentialMasterId;
   }
@@ -77,11 +101,15 @@ export default class Room extends Observer {
     return this._master;
   }
 
+  /**
+   * Functions used to start the game 
+   * This launch the countdown
+   */
   startGame() {
     this._game.initGame(this._players);
     (function toggleSecond(counter = 3) {
       if (counter > 0) {
-        this._serverSocket.to(this._name).emit("room:message", { origin: "Server", message: `Début de la partie dans ${counter}...` });
+        sendMessageToRoom(this._serverSocket, this, `Début de la partie dans ${counter}...`);
         return setTimeout(() => toggleSecond.bind(this)(counter - 1), 1000);
       }
       this._serverSocket.to(this._name).emit("game:begin");

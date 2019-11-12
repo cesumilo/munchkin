@@ -18,7 +18,7 @@ export default class Treasure extends Card {
    * @param {function} condition function that takes player as parametter to know if it's usable 
    */
   constructor(title, effect, condition) {
-    super(title, "T");
+    super(title, "Treasure");
     this._effect = effect;
     this._condition = condition;
   }

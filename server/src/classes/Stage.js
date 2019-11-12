@@ -27,16 +27,16 @@ export default class Stage {
     this._reward = null;
     this._ttl = ttl;
     this._isFinished = false;
-    this.notifiyPlayer("stage:start", {
-      ttl: this._ttl,
-      name: this._name
-    })
   }
 
   startStage() {
     if (!!this._handler && typeof this._handler === "function") {
       console.log(`[STAGE] ${this._name} Stage has been started for ${this._player.getName()} !`)
-      console.log('Handler => ', this._handler)
+      this.notifiyPlayer("stage:start", {
+        ttl: this.getTTL(),
+        name: this.getName()
+      })
+      this._handler.call(this, this._player);
       this.handleTTL()
     }
     else throw new Error("Handler must be a function");
@@ -51,14 +51,28 @@ export default class Stage {
     this._player.getSocket().emit(evtName, payload)
   }
 
+  getNext() {
+    return this._next;
+  }
+
+  getName() {
+    return this._name;
+  }
+
   endStage() {
-    this.notifiyPlayer("stage:end", {
-      name: this._name,
-      next: this._next && this._next._name,
-      nextTTL: this._next && this._next._ttl
-    })
     this._isFinished = true;
-    return this._next && this._next.startStage();
+    if (!!this.getNext()) {
+      this.notifiyPlayer("stage:end", {
+        name: this.getName(),
+        next: this.getNext().getName(),
+        nextTTL: this.getNext().getTTL()
+      });
+      console.log("[LOG] #endStage::next =>", this.getNext().getName());
+      return this.getNext().startStage();
+    } else {
+      // TODO : Trigger next player new turn
+      throw new Error("Handle next player triggers !");
+    }
   }
 
   /**
@@ -66,9 +80,8 @@ export default class Stage {
    */
   handleTTL() {
     setTimeout(() => {
-      console.log("[STAGE] handleTTL => ", this);
       if (!this._next) this._player.publish("player:endturn", this._player.getID())
-      else if (!this._next instanceof Stage)
+      else if (!this.getNext() instanceof Stage)
         throw new Error(`The next Stage must be an instance of Stage`)
       else return this.endStage();
       console.log("[STAGE] Last stage has been triggered")
