@@ -11,7 +11,7 @@ import io from "socket.io";
 import http from "http";
 
 // Helpers
-import { createRoom } from "./utils/helpers";
+import { createRoom } from "./utils/helpers/rooms";
 import { ROOM_MANAGEMENT } from "./utils/helpers/socketHandler";
 
 // Application

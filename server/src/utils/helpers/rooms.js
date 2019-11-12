@@ -15,7 +15,7 @@ let indexRoomToCreate = 0;
  * @param {SocketIO.Server} socketServer 
  * @param {string} name name of the room to create
  */
-export const createRoom = (socketServer, name = `Room-${indexRoomToCreate}`) => {
+export function createRoom(socketServer, name = `Room-${indexRoomToCreate}`) {
   return new Room(socketServer, name);
 }
 

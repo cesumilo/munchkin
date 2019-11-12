@@ -7,7 +7,7 @@
 
 import Player from '../../classes/Player'
 import Room from '../../classes/Room';
-import { createRoom, joinRoom, sendMessageToRoom, socketError } from './rooms'
+import { createRoom, joinRoom, sendMessageToRoom } from './rooms'
 import { socketError } from './index'
 
 /**

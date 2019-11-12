@@ -34,7 +34,7 @@ export default class Equipment extends Treasure {
    * @param {Player} player the player who adds the equipment
    */
   static handleAddEquipment(player) {
-    player.addEquiment(this) 
+    throw new Error("Method not implemented yet");
   }
 
 

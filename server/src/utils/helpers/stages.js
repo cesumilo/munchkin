@@ -12,7 +12,6 @@ import Stage from "../../classes/Stage";
 import Monster from "../../classes/donjons_cards/Monster";
 
 // Constants
-import { DRAW_CARD } from "../actions/Player";
 import { TYPE } from "../actions/Card";
 import { PREPARATION, BATTLE, OPEN_DOOR } from "../actions/Stage";
 
