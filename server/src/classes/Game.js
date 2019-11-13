@@ -8,7 +8,7 @@
 import Player from './Player'
 import Observer from "./others/Observer";
 import generateCards from "../utils/helpers/cards";
-import { drawCard, handleTurn } from '../utils/helpers/stages';
+import { handleTurn } from '../utils/helpers/stages';
 
 export default class Game extends Observer {
 
@@ -36,11 +36,13 @@ export default class Game extends Observer {
       throw new Error("Master player must be provided as a player got => ", master)
     handleTurn(master, this._cards, this._stages);
     players.forEach((p, index) => {
+      this.subscribe(p, "game:finish", () => this.endGame())
       this.subscribe(p, "stage:next", (payload) => {
         console.log(`${p.getName()} triggered next stage with => `, payload)
       })
-      this.subscribe(p, "stage:end", (payload) => {
-        handleTurn(players[index > players.length ? 0 : index], this._cards, this._stages)
+      this.subscribe(p, "player:endturn", () => {
+        const nextPlayer = players[index > players.length ? 0 : index]
+        handleTurn(nextPlayer, this._cards, this._stages)
       })
     })
   }

@@ -10,5 +10,5 @@
  * @param {string} errorMessage The message from the error to send to the client
  */
 export function socketError(socket, errorMessage, canBeHide = false) {
-  return socketError(socket, errorMessage, canBeHide);
+  return socket.emit("socket:error", errorMessage, canBeHide);
 }

@@ -7,11 +7,10 @@
 
 import Game from "./Game";
 import Observer from "./others/Observer";
-import Stage from "./Stage";
 import Player from "./Player";
 
 import { Socket } from 'socket.io'
-import { sendMessageToRoom } from "../utils/helpers/socketHandler";
+import { sendMessageToRoom } from "../utils/helpers/rooms";
 
 export default class Room extends Observer {
   constructor(socketServer, name) {
@@ -58,6 +57,10 @@ export default class Room extends Observer {
     return this._players.some(p => p.getName() === playerName);
   }
 
+  /**
+   * This function allows to set a master of the room
+   * @param {Player} master the master of the room
+   */
   setMaster(master) {
     this._master = master;
     this._players.push(master);
@@ -132,12 +135,6 @@ export default class Room extends Observer {
    */
   canStartGame() {
     return this._players.length >= 1 && this._players.every(p => p.isReady());
-  }
-
-  listenerEndTurn(player) {
-    this.subscribe(player, "player:endturn", (data) => {
-      // TODO : handle end of turn for data.player
-    })
   }
 
   endGame() {

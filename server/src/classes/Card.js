@@ -23,11 +23,21 @@ export default class Card {
   }
 
   /**
+   * 
+   * @param {string} typeName the type of the cards to check
+   */
+  isA(typeName) {
+    return this._type === typeName;
+  }
+
+  /**
    * Triggers when a Player play a card
    * @param {Player} player player that play the card
    * @param {boolean} firstStage if has to be apply now
    */
-  play(player, firstStage) { }
+  play(player, firstStage) {
+    console.log("[CARD] #play");
+  }
 
   /**
    * @returns {string} returns the TYPE:TITLE of the card
@@ -36,13 +46,6 @@ export default class Card {
     return `${this._type}:${this._title}`;
   }
 
-  toString() {
-    return {
-      name: this._title,
-      type: this._type,
-      imgURL: this._images[+(Math.random() * this._images.length)]
-    }
-  }
   /**
    * Get a card using its ID (TYPE:TITLE)
    * @param {Array<Card>} hand

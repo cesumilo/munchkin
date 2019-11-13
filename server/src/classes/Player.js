@@ -109,7 +109,10 @@ export default class Player extends Observable {
       case DRAW_CARD:
         throw new Error("EVENT ACTION:DRAW_CARD : NOT_IMPLEMENTED_YET");
       case PLAY_CARD:
-        throw new Error("EVENT ACTION:PLAYER_CARD : NOT_IMPLEMENTED_YET");
+        const cardToPLay = Card.getCard(this._cards, event.payload)
+        console.log("[PLAYER] #handleEvent::payload => ", payload);
+        console.log("[PLAYER] #handleEvent::cardToPlaye=> ", cardToPLay);
+        cardToPLay.play(this, false);
       default:
         throw new Error("EVENT DEFAULT : event got unknown action");
     }
@@ -166,9 +169,16 @@ export default class Player extends Observable {
    * Draw card function
    * @param {Array<Card>} cards 
    */
-  getCards(cards = []) {
+  addCards(cards = []) {
     this._cards.push(...cards)
     this.getSocket().emit("player:drawCard", cards)
+    return this._cards;
+  }
+
+  /**
+   * @returns {Array<Card>} returns all the Cards that the player has
+   */
+  getCards() {
     return this._cards;
   }
 

@@ -39,9 +39,10 @@ function handlerDisconect(socket, socketServer, availableRooms) {
  * This handler takes care of room:join received by the client
  * @param {SocketIO.Socket} socket the socket to send errors and for player creation
  * @param {object} payload object received from the client who wants to join the room
+ * @param {SocketIO.Server} socketServer the Server socket used to join the room
  * @param {Array<Room>} availableRooms Array of all available rooms
  */
-function handlerJoinRoom(socket, payload, availableRooms) {
+function handlerJoinRoom(socketServer, socket, payload, availableRooms) {
   if (!payload.playerName || payload.playerName === "")
     return socketError(socket, "You must provide a username to play the game", true);
   const roomToJoin = Room.getRoomWithName(availableRooms, payload.roomName);
@@ -85,7 +86,7 @@ function handleRoomCreation(socketServer, socket, payload, availableRooms) {
  */
 export function ROOM_MANAGEMENT(availableRooms, socket, socketServer) {
   socket.on("room:create", payload => handleRoomCreation(socketServer, socket, payload, availableRooms))
-  socket.on("room:join", payload => handlerJoinRoom(socket, payload, availableRooms))
+  socket.on("room:join", payload => handlerJoinRoom(socketServer, socket, payload, availableRooms))
   socket.on("disconnect", () => handlerDisconect(socket, socketServer, availableRooms))
   socket.on("player:message", payload => socketServer.to(payload.roomName).emit("room:message", { origin: payload.name, message: payload.message }))
   socket.on("game:start", payload => {

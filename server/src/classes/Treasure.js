@@ -26,10 +26,12 @@ export default class Treasure extends Card {
   
   /**
    * Player will use the Card  
+   * @override
    * @param {Player} player 
+   * @param {boolean} firstStage
    */
-  play(player) {
-    if(this._condition(player)) {
+  play(player, firstStage) {
+    if(this._condition(player) && !firstStage) {
       this._effect.call(this, player)
     } else throw Error("Your player does not fill conditions to play this card")
   }

@@ -7,19 +7,21 @@
 
 import Player from "./Player";
 import { NEXT_STAGE } from '../utils/actions/Stage';
+import Observable from "./others/Observable";
 
 export const SECOND = 1000;
 export const MINUTE = 60 * SECOND;
 
-export default class Stage {
+export default class Stage extends Observable {
 
   /**
    * @param {Player} player represents the player
    * @param {string} name represents the stage's name
-   * @param {Stage} nextStage instance of next stage to process (last stage got nextStage => null) 
+   * @param {(player) => Stage} nextStage instance of next stage to process (last stage got nextStage => null) 
    * @param {number} ttl Time to Live of the stage before process the other stage
    */
   constructor(player, name, nextStage, handler, ttl = 2 * MINUTE) {
+    super();
     this._player = player;
     this._name = name;
     this._next = nextStage;
@@ -52,6 +54,9 @@ export default class Stage {
   }
 
   getNext() {
+    if (this._next instanceof Function) {
+      return this._next.call(this, this._player);
+    }
     return this._next;
   }
 
@@ -68,10 +73,11 @@ export default class Stage {
         nextTTL: this.getNext().getTTL()
       });
       console.log("[LOG] #endStage::next =>", this.getNext().getName());
-      return this.getNext().startStage();
+      this._player.sendAttributes()
+      return this.processNext(this.getNext());
     } else {
-      // TODO : Trigger next player new turn
-      throw new Error("Handle next player triggers !");
+      this._player.sendAttributes()
+      this._player.publish("player:endturn", this._player.getID());
     }
   }
 
@@ -80,7 +86,11 @@ export default class Stage {
    */
   handleTTL() {
     setTimeout(() => {
-      if (!this._next) this._player.publish("player:endturn", this._player.getID())
+      if (!this.getNext()) {
+        this._player.sendAttributes()
+        this._player.publish("player:endturn", this._player.getID());
+        this.endStage()
+      }
       else if (!this.getNext() instanceof Stage)
         throw new Error(`The next Stage must be an instance of Stage`)
       else return this.endStage();
@@ -95,18 +105,18 @@ export default class Stage {
     return this._ttl;
   }
 
+  /**
+   * 
+   * @param {any} stage function that returns stage or stage
+   */
   processNext(stage) {
-    if (!stage || !(stage instanceof Stage)) {
-      throw new Error("Stage must exists and be instance of Stage");
+    if (!!stage && stage instanceof Function) {
+      stage = stage.call(this, this._player);
     }
-    console.log("[STAGE] enter processNextStage")
-    const playerSocket = this._player.getSocket();
+    if (!stage || (!!stage && !(stage instanceof Stage))) {
+      throw new Error("Stage must exists and be a Stage or a function that handle stage");
+    }
     this._player.setCurrentStage(stage);
-    playerSocket.emit("player:stage", {
-      action: NEXT_STAGE,
-      payload: {
-        socketID: playerSocket.id
-      }
-    })
+    stage.startStage()
   }
 }
