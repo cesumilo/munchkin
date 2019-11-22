@@ -25,13 +25,13 @@ export default class Donjon extends Card {
    * @param {boolean} firstStage to predict if it has to proc without player agreement.
    */
   play(player, firstStage) {
-    if (this._hasEffect && !firstStage) {
+    if ((this._hasEffect || typeof this._hasEffect === "function" && this._effect(player) ) && !firstStage) {
       this.applyEffect(player)
     } else return false;
   }
 
   applyEffect(player) {
-    console.log("[DONJON] player => ", player)
+    console.log("[DONJON] #applyEffect::cards ", this.constructor.name)
     return this._effect(player)
   }
 }

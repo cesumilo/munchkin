@@ -14,6 +14,20 @@ import { END_TURN } from "../utils/actions/Stage";
 import Monster from "./donjons_cards/Monster";
 import Equipment from "./treasure_cards/Equipment";
 
+export const CLASSES = {
+  NONE: "NONE",
+  WARRIOR: "WARRIOR",
+  WIZARD: "WIZARD",
+  THIEF: "THIEF",
+}
+
+export const RACES = {
+  HUMAN: "HUMAN",
+  DWARF: "DWARF",
+  HOBBIT: "HOBBIT",
+  ELF: "ELF"
+}
+
 export default class Player extends Observable {
   /**
    *
@@ -21,19 +35,19 @@ export default class Player extends Observable {
    * @param {SocketIO.Socket} socket
    */
   constructor(name, socket) {
+    if (!name) throw new Error("Name must be provided")
     super();
     this._socket = socket;
     this._name = name;
     this._lvl = 1;
     this._strength = 0;
-    this._equipments = [];
+    this._equipments = []
     this._cards = [];
-    this._race = "Humain";
-    this._class = "None";
+    this._race = RACES.HUMAN;
+    this._class = CLASSES.WARRIOR;
     this._speed = 0;
     this._currentStage = null;
     this._ready = false;
-    this.waitForEvents();
   }
 
   getLevel() {
@@ -45,6 +59,7 @@ export default class Player extends Observable {
    * @param {string} race the new race of the Player
    */
   setRace(race) {
+    if (!Object.keys(RACES).some(r => race === r)) throw new Error("Race must be one of RACE enum");
     this._race = race;
   }
 
@@ -53,7 +68,8 @@ export default class Player extends Observable {
    * @param {string} classe the new  class of the Player
    */
   setClass(classe) {
-    this._cards = classe
+    if (!Object.keys(CLASSES).some(s => classe === s)) throw new Error("Classe must be one of CLASSES enum");
+    this._class = classe
   }
 
   /**
@@ -166,6 +182,15 @@ export default class Player extends Observable {
   }
 
   /**
+   * Test how many equipment the player has
+   * @param {Equipment} equipment the equipment to check
+   * @returns {number} returns the number of equipments on the same position
+   */
+  has(equipment) {
+    return this._equipments.filter(e => equipment.getPosition() == e.getPosition()).length
+  }
+
+  /**
    * Draw card function
    * @param {Array<Card>} cards 
    */
@@ -204,6 +229,14 @@ export default class Player extends Observable {
     return this.getSocket() && this.getSocket().id;
   }
 
+  getClass() {
+    return this._class;
+  }
+
+  getRace() {
+    return this._race;
+  }
+
   getName() {
     return this._name;
   }
@@ -213,6 +246,8 @@ export default class Player extends Observable {
    * @param {Monster} monstrer the monster to check if player can beat him
    */
   beat(monstrer) {
+    if (this.getRace() === "Warrior")
+      return this.getStrength() >= monstrer.getStrength()
     return this.getStrength() > monstrer.getStrength()
   }
 }

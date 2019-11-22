@@ -8,12 +8,18 @@
 // Classes
 import Player from "../../classes/Player";
 import Card from "../../classes/Card";
-import Stage from "../../classes/Stage";
+import Stage, { MINUTE } from "../../classes/Stage";
 import Monster from "../../classes/donjons_cards/Monster";
 
 // Constants
 import { TYPE } from "../actions/Card";
-import { PREPARATION, BATTLE, OPEN_DOOR, WAITING, END_TURN } from "../actions/Stage";
+import {
+  PREPARATION,
+  BATTLE,
+  OPEN_DOOR,
+  WAITING,
+  END_TURN
+} from "../actions/Stage";
 
 /**
  * Helper for drawing cards for specific player
@@ -24,98 +30,147 @@ import { PREPARATION, BATTLE, OPEN_DOOR, WAITING, END_TURN } from "../actions/St
  */
 export function drawCard(player, counter, availablesCards) {
   if (counter > availablesCards.length) {
-    player.sendError(`You can't draw ${counter} when there is only ${availablesCards.length}`)
-    throw new Error(`NOT_ENOUGH_CARDS in availableCards`)
+    player.sendError(
+      `You can't draw ${counter} when there is only ${availablesCards.length}`
+    );
+    throw new Error(`NOT_ENOUGH_CARDS in availableCards`);
   }
   const cardsToDraw = availablesCards.splice(0, counter);
-  const cards = player.addCards(cardsToDraw)
-  return cards;
+  player.addCards(cardsToDraw);
+  return [cardsToDraw];
+}
+
+function generateStage(player, stageName, next, handler, TTL = 2 * MINUTE) {
+  return () => new Stage(player, stageName, next, handler, TTL);
 }
 
 /**
- * 
+ *
  * @param {Player} player player that has to open
  */
 function handleOpenDoor(player, availablesCards) {
   try {
-    drawCard(player, 1, availablesCards);
-    player.sendAttributes()
+    const cards = drawCard(player, 1, availablesCards);
+    player.sendAttributes();
+    if (cards.some(c => c.isA(TYPE.MONSTER))) {
+      console.log("[STAGES] #handleOpenDoor : found a monster");
+      debugger;
+      return generateStage(
+        player,
+        BATTLE,
+        () => null,
+        handleBattleStage(player, cards)
+      );
+    } else if (cards.some(c => c.isA(TYPE.MALEDICTION))) {
+      console.log("[STAGES] #handleOpenDoor : found a malediction");
+      cards.forEach(c => c.play(player, false));
+      // TODO : Handle next stage when getting cards like MALEDICTION
+      return generateStage(
+        player,
+        END_TURN,
+        () => null,
+        () => console.log("[STAGE] #endTurn"),
+        1500
+      );
+    } else {
+      console.log(
+        "[STAGES] #handleOpenDoor : found no monster nor malediction found"
+      );
+      return generateStage(
+        player,
+        WAITING,
+        () => null,
+        () => console.log("[STAGE] #waitingStage")
+      );
+    }
   } catch (err) {
-    console.error(`[STAGE] handleOpenDoor::err => `, err)
-    player.sendError(err.message)
+    console.error(`[STAGE] handleOpenDoor::err => `, err);
+    player.sendError(err.message);
+    debugger;
   }
 }
 
 /**
- * 
+ *
  * @param {Player} player player that will make the battle
- * @param {Array<Monster>} monsters 
+ * @param {Array<Monster>} monsters
  */
 function handleBattleStage(player, monsters) {
-  if (monsters.some(m => m._type !== TYPE.MONSTER))
-    throw new Error("Monsters can only provides monsters !")
+  if (monsters.some(m => m._type !== TYPE.MONSTER)) {
+    monsters.forEach(m =>
+      console.log("[BATTLE] #handleBattleStage::monster => ", m._type)
+    );
+    throw new Error("Monsters can only provides monsters !");
+  }
+  console.log(
+    `[BATTLE] ${player.getName()} has ${player.getStrength()} strength`
+  );
+  monsters.forEach(m =>
+    console.log(`[BATTLE] ${m.getName()} has ${m.getStrength()} strength`)
+  );
   if (monsters.some(m => !player.beat(m))) {
-    console.log("[BATTLE] CHOUQUETTE")
-    console.log("[BATTLE] monster => ", monsters)
-    // TODO: handle asking for help
+    console.log("[BATTLE] CHOUQUETTE");
+    player.sendError("You must ask for Help");
   } else {
-    // TODO : handle fight
+    console.log("[BATTLE] You can win the fight !!");
+    monsters.forEach(m =>
+      console.log(`[${m.getName()}] gives reward of : ${m.getReward()}`)
+    );
   }
 }
 
 /**
- * Handle PREPARATION Stage for the player 
- * @param {Player} player 
- * @param {Array<Card>} availableCards 
+ * Handle PREPARATION Stage for the player
+ * @param {Player} player
+ * @param {Array<Card>} availableCards
  */
-function handlePreparation(player, availableCards) {
-  const potentialCards = drawCard(player, 4, availableCards);
-  if (!!potentialCards && Array.isArray(potentialCards) && potentialCards.length === 4) {
-    console.log("[LOG] #handlePreparation")
-    player.sendAttributes()
-  } else {
-    player.sendError("Oh mon dieu il n'y a pas assez de cartes !")
+function handlePreparation(player) {
+  try {
+    console.log("[LOG] #handlePreparation");
+    player.sendAttributes();
+  } catch (err) {
+    player.sendError(err.message);
+    console.log("[ERR] err => ", err);
+    debugger; //eslint-disable-line
   }
 }
 
 /**
- * @param {Player} player the player instance to find which next stage has to be set
- */
-function handleFindNextStage(player, condition = null, stage1 = null, stage2 = null) {
-  if (!!condition &&
-    condition instanceof Function) {
-    return condition(player) ? stage1 : stage2;
-  } else if (player instanceof Stage) return player;
-  else throw new Error("BAD METHOD CALL : none of the parameters are Stage !")
-}
-
-/**
- * 
- * @param {Player} player player to check
- */
-function conditionalStageForBattle(player) {
-  return player.getCards().some(c => c.isA(TYPE.MONSTER));
-}
-
-
-/**
- * 
+ *
  * @param {Player} player player's turn
  * @param {Array<Card>} availablesCards available cards used for draw events
  * @param {Array<Stage>} allStages stages from the game (MADE FOR HISTORY)
  */
 export function handleTurn(player, availablesCards, allStages) {
-  const battleStage = new Stage(player, BATTLE, null, () => handleBattleStage(player, availablesCards.filter(c => c._type === TYPE.MONSTER)), 5000)
-  const firstStage = new Stage(player, OPEN_DOOR, (player) => handleFindNextStage(player, conditionalStageForBattle, battleStage, chooseCardStage), () => handleOpenDoor(player, availablesCards), 5000)
-  const preparationStage = new Stage(player, PREPARATION, firstStage, () => handlePreparation(player, availablesCards), 3000);
-  const endTurnStage = new Stage(player, END_TURN, firstStage, () => null, 3000);
-  const chooseCardStage = new Stage(player, WAITING, endTurnStage, () => null, 3000);
-  preparationStage.startStage()
-  allStages.push([
-    preparationStage,
+  debugger;
+  const firstStage = new Stage(
+    player,
+    OPEN_DOOR,
+    null,
+    () => handleOpenDoor(player, availablesCards),
+    5000
+  );
+  const preparationStage = new Stage(
+    player,
+    PREPARATION,
     firstStage,
-    battleStage,
+    () => handlePreparation(player, availablesCards),
+    3000
+  );
+  const endTurnStage = new Stage(
+    player,
+    END_TURN,
+    firstStage,
+    () => null,
+    3000
+  );
+  const chooseCardStage = new Stage(
+    player,
+    WAITING,
     endTurnStage,
-    chooseCardStage
-  ])
+    () => null,
+    3000
+  );
+  preparationStage.startStage();
+  allStages.push([preparationStage, firstStage, endTurnStage, chooseCardStage]);
 }

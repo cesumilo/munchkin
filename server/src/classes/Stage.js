@@ -6,8 +6,8 @@
  */
 
 import Player from "./Player";
-import { NEXT_STAGE } from '../utils/actions/Stage';
 import Observable from "./others/Observable";
+import { OPEN_DOOR } from "../utils/actions/Stage";
 
 export const SECOND = 1000;
 export const MINUTE = 60 * SECOND;
@@ -31,17 +31,31 @@ export default class Stage extends Observable {
     this._isFinished = false;
   }
 
-  startStage() {
+  /**
+   * starting stage function
+   * @param {boolean} triggersNext allow
+   */
+  startStage(triggersNext = this._name === OPEN_DOOR) {
     if (!!this._handler && typeof this._handler === "function") {
       console.log(`[STAGE] ${this._name} Stage has been started for ${this._player.getName()} !`)
       this.notifiyPlayer("stage:start", {
         ttl: this.getTTL(),
         name: this.getName()
       })
-      this._handler.call(this, this._player);
+      const returnValues = this._handler.call(this, this._player);
+      if (triggersNext && !returnValues)
+        throw new Error("when triggersNext is activated your handler must return a fn(player) => Stage")
+      else if (triggersNext) {
+        this._next = returnValues
+        console.log("[LOG] #startStage enter triggersNext")
+      }
       this.handleTTL()
     }
-    else throw new Error("Handler must be a function");
+    else if (!!this._handler) {
+      throw new Error("Handler must be a function");
+    } else {
+      throw new Error("There is no Handler specified")
+    }
   }
 
   /**
@@ -53,6 +67,10 @@ export default class Stage extends Observable {
     this._player.getSocket().emit(evtName, payload)
   }
 
+  /**
+   * Used to get the next Stage or null if none is set
+   * @returns {(player : Player) => Stage | null}
+   */
   getNext() {
     if (this._next instanceof Function) {
       return this._next.call(this, this._player);
@@ -91,7 +109,7 @@ export default class Stage extends Observable {
         this._player.publish("player:endturn", this._player.getID());
         this.endStage()
       }
-      else if (!this.getNext() instanceof Stage)
+      else if (!(this.getNext() instanceof Stage) && !(this.getNext() instanceof Function))
         throw new Error(`The next Stage must be an instance of Stage`)
       else return this.endStage();
       console.log("[STAGE] Last stage has been triggered")

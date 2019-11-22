@@ -19,6 +19,7 @@ const availableRooms = [];
 const expressServer = express();
 const httpServer = http.createServer(expressServer);
 const socketServer = io(httpServer);
+globalThis["room"] = availableRooms;
 
 expressServer.use(helm());
 expressServer.use(cors());

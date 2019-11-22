@@ -1,11 +1,11 @@
-import Player from "./Player";
-
 /**
  * @author Alexandre SAISON <alexandre.saison.pro@gmail.com>
  * @file Card Model
  * @desc Created on 2019-10-20 11:22:15 am
  * @copyright APPI SASU
  */
+
+import Player from "./Player";
 
 export default class Card {
   constructor(title, type) {
@@ -24,7 +24,7 @@ export default class Card {
 
   /**
    * 
-   * @param {string} typeName the type of the cards to check
+   * @param {string\|Class} typeName the type of the cards to check
    */
   isA(typeName) {
     return this._type === typeName;

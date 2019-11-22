@@ -7,7 +7,7 @@
 
 import Player from './Player'
 import Observer from "./others/Observer";
-import generateCards from "../utils/helpers/cards";
+import { generateDonjons, generateTreasures } from "../utils/helpers/cards";
 import { handleTurn } from '../utils/helpers/stages';
 
 export default class Game extends Observer {
@@ -17,7 +17,8 @@ export default class Game extends Observer {
     this._isLaunched = false;
     this._players = []
     this._stages = []
-    this._cards = generateCards()
+    this._cards = generateDonjons()
+    this._treasures = generateTreasures();
   }
 
   initGame(players) {

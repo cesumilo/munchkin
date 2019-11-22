@@ -27,6 +27,7 @@ export function createRoom(socketServer, name = `Room-${indexRoomToCreate}`) {
  */
 export function joinRoom(socketServer, socket, room, playerName) {
   const player = new Player(playerName, socket);
+  player.waitForEvents();
 
   // Set a Room master if there is none or only join the Room
   if (!room.getMaster())
