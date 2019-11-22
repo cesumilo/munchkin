@@ -1,3 +1,10 @@
+/**
+ * @author Alexandre Saison <alexandre.saison@appi-conseil.com>
+ * @file Description
+ * @desc Created on 2019-11-22 10:18:49 am
+ * @copyright APPI SASU
+ */
+
 import Donjon, { defaultEffect } from "../Donjon";
 import { TYPE } from "../../utils/actions/Card";
 
@@ -11,11 +18,11 @@ export default class Monster extends Donjon {
    */
   constructor(title, strength, reward = [], effect = defaultEffect) {
     super(title, false, effect, TYPE.MONSTER);
-    this._reward = reward;
-    this._strength = strength;
+    this.setReward(reward);
+    this.setStrength(strength)
   }
 
-  checkForReward() {
+  checkForReward(reward) {
     if (!Array.isArray(reward) || !reward.every(r => r.nbLevel && r.nbTreasure))
       throw new Error(
         "A reward must contains nbLevel and nbTreasure properties"
@@ -28,7 +35,12 @@ export default class Monster extends Donjon {
    * @param {[{nbTreasure: number, nbLevel: number}]} reward
    */
   setReward(reward) {
-    if (this.checkForReward()) this._reward = reward;
+    if (this.checkForReward(reward)) this._reward = reward;
+  }
+
+  setStrength(strength) {
+    if(strength < 0) throw new Error("Monster cannot have 0 strength");
+    this._strength = strength;
   }
 
   getReward() {

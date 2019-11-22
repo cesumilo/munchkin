@@ -4,11 +4,13 @@
   "description": "Munchkin",
   "main": "index.js",
   "scripts": {
-    "build": "babel -d dist src",
-    "build:specs": "babel -d specs_dist specs",
+    "build": "yarn clean:js && babel -d dist src",
+    "build:specs": "yarn clear:specs && babel -d specs_dist specs",
     "start": "yarn build && node --inspect dist/index.js",
-    "version": "babel --version",
-    "test": "yarn build && yarn build:specs && mocha specs_dist"
+    "test": "yarn build && yarn build:specs && mocha specs_dist",
+    "clean:specs": "rm -rf specs_dist",
+    "clean:js": "rm -rf dist",
+    "clean": "yarn clean:specs && yarn clean:js"
   },
   "repository": "https://www.github.com/cesumilo/munchkin",
   "author": "Alexandre SAISON <alexandre.saison.pro@gmail.com>",

@@ -80,7 +80,8 @@ function handleOpenDoor(player, availablesCards) {
         player,
         WAITING,
         () => null,
-        () => console.log("[STAGE] #waitingStage")
+        () => console.log("[STAGE] #waitingStage"),
+        1500
       );
     }
   } catch (err) {
@@ -143,7 +144,7 @@ function handlePreparation(player) {
  */
 export function handleTurn(player, availablesCards, allStages) {
   debugger;
-  const firstStage = new Stage(
+  const firstStage = new generateStage(
     player,
     OPEN_DOOR,
     null,
@@ -160,7 +161,7 @@ export function handleTurn(player, availablesCards, allStages) {
   const endTurnStage = new Stage(
     player,
     END_TURN,
-    firstStage,
+    () => null,
     () => null,
     3000
   );

@@ -170,7 +170,8 @@ export default class Player extends Observable {
   }
 
   getStrength() {
-    return this._lvl + this._equipments.reduce((a, c) => a + c.getValue(), 0);
+    const reducer = this._equipments.reduce((a, c) => a + c.getValue(), 0) 
+    return this._lvl + reducer;
   }
 
   /**

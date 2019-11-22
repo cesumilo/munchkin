@@ -13,11 +13,10 @@ export const SECOND = 1000;
 export const MINUTE = 60 * SECOND;
 
 export default class Stage extends Observable {
-
   /**
    * @param {Player} player represents the player
    * @param {string} name represents the stage's name
-   * @param {(player) => Stage} nextStage instance of next stage to process (last stage got nextStage => null) 
+   * @param {(player) => Stage} nextStage instance of next stage to process (last stage got nextStage => null)
    * @param {number} ttl Time to Live of the stage before process the other stage
    */
   constructor(player, name, nextStage, handler, ttl = 2 * MINUTE) {
@@ -37,34 +36,41 @@ export default class Stage extends Observable {
    */
   startStage(triggersNext = this._name === OPEN_DOOR) {
     if (!!this._handler && typeof this._handler === "function") {
-      console.log(`[STAGE] ${this._name} Stage has been started for ${this._player.getName()} !`)
+      console.log(
+        `[STAGE] ${
+          this._name
+        } Stage has been started for ${this._player.getName()} !`
+      );
       this.notifiyPlayer("stage:start", {
         ttl: this.getTTL(),
         name: this.getName()
-      })
+      });
       const returnValues = this._handler.call(this, this._player);
+
       if (triggersNext && !returnValues)
-        throw new Error("when triggersNext is activated your handler must return a fn(player) => Stage")
+        throw new Error(
+          "when triggersNext is activated your handler must return a fn(player) => Stage"
+        );
       else if (triggersNext) {
-        this._next = returnValues
-        console.log("[LOG] #startStage enter triggersNext")
+        this._next = returnValues;
+        console.log("[LOG] #startStage enter triggersNext => ", this._next);
       }
-      this.handleTTL()
-    }
-    else if (!!this._handler) {
+
+      this.handleTTL();
+    } else if (!!this._handler) {
       throw new Error("Handler must be a function");
     } else {
-      throw new Error("There is no Handler specified")
+      throw new Error("There is no Handler specified");
     }
   }
 
   /**
-   * send event to 
-   * @param {string} evtName 
-   * @param {object} payload 
+   * send event to
+   * @param {string} evtName
+   * @param {object} payload
    */
   notifiyPlayer(evtName, payload) {
-    this._player.getSocket().emit(evtName, payload)
+    this._player.getSocket().emit(evtName, payload);
   }
 
   /**
@@ -91,10 +97,10 @@ export default class Stage extends Observable {
         nextTTL: this.getNext().getTTL()
       });
       console.log("[LOG] #endStage::next =>", this.getNext().getName());
-      this._player.sendAttributes()
+      this._player.sendAttributes();
       return this.processNext(this.getNext());
     } else {
-      this._player.sendAttributes()
+      this._player.sendAttributes();
       this._player.publish("player:endturn", this._player.getID());
     }
   }
@@ -105,14 +111,16 @@ export default class Stage extends Observable {
   handleTTL() {
     setTimeout(() => {
       if (!this.getNext()) {
-        this._player.sendAttributes()
+        this._player.sendAttributes();
         this._player.publish("player:endturn", this._player.getID());
-        this.endStage()
-      }
-      else if (!(this.getNext() instanceof Stage) && !(this.getNext() instanceof Function))
-        throw new Error(`The next Stage must be an instance of Stage`)
+        this.endStage();
+      } else if (
+        !(this.getNext() instanceof Stage) &&
+        !(this.getNext() instanceof Function)
+      )
+        throw new Error(`The next Stage must be an instance of Stage`);
       else return this.endStage();
-      console.log("[STAGE] Last stage has been triggered")
+      console.log("[STAGE] Last stage has been triggered");
     }, this.getTTL());
   }
 
@@ -124,7 +132,7 @@ export default class Stage extends Observable {
   }
 
   /**
-   * 
+   *
    * @param {any} stage function that returns stage or stage
    */
   processNext(stage) {
@@ -132,9 +140,11 @@ export default class Stage extends Observable {
       stage = stage.call(this, this._player);
     }
     if (!stage || (!!stage && !(stage instanceof Stage))) {
-      throw new Error("Stage must exists and be a Stage or a function that handle stage");
+      throw new Error(
+        "Stage must exists and be a Stage or a function that handle stage"
+      );
     }
     this._player.setCurrentStage(stage);
-    stage.startStage()
+    stage.startStage();
   }
 }
