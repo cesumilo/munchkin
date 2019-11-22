@@ -15,7 +15,7 @@ export default class Malediction extends Donjon {
    * @param {(player) => boolean)} hasEffect tells if the Malediction has to be applyed
    * @param {(player) => void} effect effect to apply to the User 
    */
-  constructor(title, hasEffect = hasEffect, effect = defaultEffect) {
+  constructor(title, effect= defaultEffect, hasEffect = hasEffect) {
     super(title, hasEffect, effect, TYPE.MALEDICTION);
   }
 
@@ -25,6 +25,7 @@ export default class Malediction extends Donjon {
    * @param {[(player) => boolean]} conditions functions array which returns boolean values depending on the player succeed pass the checks
    */
   static hasEffect(player, conditions = []) {
+
     return conditions.every(c => c(player))
   }
 

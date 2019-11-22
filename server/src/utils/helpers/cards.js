@@ -43,7 +43,8 @@ export function generateTreasures() {
       "Epée qui donne du courage",
       POSITION.HAND,
       player => Equipment.handleAddEquipment(player),
-      () => true)
+      () => true
+    )
   ]);
 }
 

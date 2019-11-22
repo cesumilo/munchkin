@@ -42,7 +42,10 @@ export default class Game extends Observer {
         console.log(`${p.getName()} triggered next stage with => `, payload)
       })
       this.subscribe(p, "player:endturn", () => {
+        console.log("[LOG] End of turn for ", p.getName())
         const nextPlayer = players[index > players.length ? 0 : index]
+        console.log('[LOG] Begining of turn for ', nextPlayer.getName())
+        console.log("--------------------------")
         handleTurn(nextPlayer, this._cards, this._stages)
       })
     })
