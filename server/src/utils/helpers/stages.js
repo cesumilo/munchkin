@@ -37,7 +37,7 @@ export function drawCard(player, counter, availablesCards) {
   }
   const cardsToDraw = availablesCards.splice(0, counter);
   player.addCards(cardsToDraw);
-  return [cardsToDraw];
+  return cardsToDraw;
 }
 
 function generateStage(player, stageName, next, handler, TTL = 2 * MINUTE) {

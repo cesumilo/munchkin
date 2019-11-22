@@ -30,7 +30,6 @@ export const RACES = {
 
 export default class Player extends Observable {
   /**
-   *
    * @param {string} name
    * @param {SocketIO.Socket} socket
    */
@@ -40,7 +39,6 @@ export default class Player extends Observable {
     this._socket = socket;
     this._name = name;
     this._lvl = 1;
-    this._strength = 0;
     this._equipments = []
     this._cards = [];
     this._race = RACES.HUMAN;
@@ -48,6 +46,7 @@ export default class Player extends Observable {
     this._speed = 0;
     this._currentStage = null;
     this._ready = false;
+    this._strength = this.getStrength();
   }
 
   getLevel() {

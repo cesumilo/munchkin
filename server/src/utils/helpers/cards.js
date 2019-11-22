@@ -11,7 +11,7 @@ import PlayerClass from "../../classes/donjons_cards/Class";
 import PlayerRace from "../../classes/donjons_cards/Race";
 import LevelDown from "../../classes/treasure_cards/levelDown";
 import LevelUp from "../../classes/treasure_cards/levelUp";
-import Equipment from "../../classes/treasure_cards/Equipment";
+import Equipment, { POSITION } from "../../classes/treasure_cards/Equipment";
 import Card from "../../classes/Card";
 import Malediction from "../../classes/donjons_cards/Malediction";
 import { RACES, CLASSES } from "../../classes/Player";
@@ -41,9 +41,9 @@ export function generateTreasures() {
     new LevelDown("Trahison !!", player => LevelDown.handleLevelDown(player)),
     new Equipment(
       "Epée qui donne du courage",
+      POSITION.HAND,
       player => Equipment.handleAddEquipment(player),
-      () => true
-    )
+      () => true)
   ]);
 }
 
