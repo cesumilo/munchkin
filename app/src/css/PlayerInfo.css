@@ -1,0 +1,25 @@
+/**
+ * @author Guillaume Robin <>
+ * @file PlayerInfo component stylesheet
+ * @desc Created on 2019-10-20 11:40:21 am
+ * @copyright GPL-3.0
+ */
+.player-info-container {
+  height: 14%;
+  width: 100%;
+  z-index: 1;
+}
+
+.player-info-col {
+  width: 100%;
+}
+
+.player-info-texts {
+  display: flex;
+  flex-direction: column;
+}
+
+.player-coins-img {
+  display: inline-block;
+  width: 22px;
+}

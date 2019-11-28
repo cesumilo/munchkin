@@ -1,0 +1,14 @@
+/**
+ * @author Guillaume Robin <>
+ * @file CardInfo component stylesheet
+ * @desc Created on 2019-10-20 11:52:09 am
+ * @copyright GPL-3.0
+ */
+.card-info-container {
+  height: 50%;
+  width: 100%;
+}
+
+.card-info-col {
+  width: 100%;
+}

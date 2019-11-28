@@ -1,0 +1,16 @@
+/**
+ * @author Guillaume Robin <>
+ * @file Hand component stylesheet
+ * @desc Created on 2019-10-19 10:09:00 pm
+ * @copyright GPL-3.0
+ */
+.hand {
+  height: 30%;
+  width: 80%;
+  justify-content: center;
+  padding: 30px;
+  background-position: center; /* Center the image */
+  background-repeat: no-repeat; /* Do not repeat the image */
+  background-size: contain;
+  background-color: #42210B;
+}

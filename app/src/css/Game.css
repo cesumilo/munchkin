@@ -1,0 +1,63 @@
+/**
+ * @author Guillaume Robin <>
+ * @file App component stylesheet
+ * @desc Created on 2019-10-16 12:04:27 am
+ * @copyright GPL-3.0
+ */
+.game-container {
+  background-color: #3A4F5D !important;
+}
+
+.ingame-desc {
+  font-family: 'Barlow Semi Condensed', sans-serif;
+}
+
+.ingame-title {
+  font-family: 'Grenze', serif;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: #3A4F5D !important;
+}
+
+.game-container {
+  width: 100vw;
+  height: 100vh;
+  position: relative;
+}
+
+.game-board {
+  height: 100vh;
+  position: absolute !important;
+  z-index: 1 !important;
+  width: 100vw !important;
+  max-width: 100vw !important;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.hand-background {
+  background-color: #42210B;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100vw;
+  height: 30%;
+  z-index: 0;
+}
+
+.board {
+  height: 70%;
+  width: 100%;
+}
+
+/* Fix row in bootstrap */
+.row {
+  margin: 0 !important;
+}

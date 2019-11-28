@@ -1,0 +1,17 @@
+/*
+font-family: 'Grenze', serif; (medieval title)
+font-family: 'EB Garamond', serif; (medieval text)
+font-family: 'Barlow Semi Condensed', sans-serif; (classic text)
+*/
+#root {
+  height: 100vh;
+  width: 100vw;
+}
+
+.generic-container {
+  width: inherit;
+  height: inherit;
+  margin: 0;
+  padding: 0;
+  background-color: black;
+}

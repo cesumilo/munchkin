@@ -1,0 +1,21 @@
+/**
+ * @author Guillaume Robin and Alexandre Saison <>
+ * @file Connecting component stylesheet
+ * @desc Created on 2019-10-23 10:58:15 pm
+ * @copyright Creative Commons Attribution-NonCommercial 4.0 International License
+ */
+.full-page {
+  height: 100%;
+}
+
+#spinner-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  color: white;
+}
+
+#loading-text {
+  margin-top: 1em;
+}

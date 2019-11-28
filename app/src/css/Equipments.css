@@ -1,0 +1,25 @@
+/**
+ * @author Guillaume Robin <>
+ * @file Decks component stylesheet
+ * @desc Created on 2019-10-20 11:31:36 am
+ * @copyright GPL-3.0
+ */
+.decks-container {
+  height: 27%;
+  width: 100%;
+}
+
+.decks-col {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.equip-icon {
+  height: 100%;
+  padding: 2px;
+  max-width: 30%;
+}

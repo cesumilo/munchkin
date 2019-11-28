@@ -1,0 +1,33 @@
+{
+  "name": "server",
+  "version": "1.0.0",
+  "description": "Munchkin",
+  "main": "index.js",
+  "scripts": {
+    "build": "yarn run clean:js && babel -d dist src",
+    "build:specs": "yarn run clean:specs && babel -d specs_dist specs",
+    "start": "yarn build && node --inspect dist/index.js",
+    "test": "yarn build && yarn run build:specs && mocha specs_dist",
+    "clean:specs": "rm -rf specs_dist",
+    "clean:js": "rm -rf dist",
+    "clean": "yarn run clean:specs && yarn run clean:js"
+  },
+  "repository": "https://www.github.com/cesumilo/munchkin",
+  "author": "Alexandre SAISON <alexandre.saison.pro@gmail.com>",
+  "license": "SEE LICENSE IN LICENSE",
+  "dependencies": {
+    "@babel/cli": "^7.6.4",
+    "@babel/core": "^7.6.4",
+    "@babel/node": "^7.6.3",
+    "@babel/preset-env": "^7.6.3",
+    "chai": "^4.2.0",
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
+    "helmet": "^3.21.1",
+    "mocha": "^6.2.2",
+    "path": "^0.12.7",
+    "sinon": "^7.5.0",
+    "sinon-chai": "^3.3.0",
+    "socket.io": "^2.3.0"
+  }
+}
