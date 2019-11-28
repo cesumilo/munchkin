@@ -27,7 +27,7 @@ class Room extends React.Component {
   }
   componentDidUpdate() {
     if (this.props.gameStarted) {
-      this.props.push(<Game />);
+      this.props.push(<Game player={this.props.player} />);
     }
   }
 
@@ -78,6 +78,7 @@ const mapStateToProps = (state, ownProps) => {
   return {
     ...ownProps,
     selectedRoom: state.play.selectedRoom,
+    player : state.player,
     ...state.room,
   };
 };

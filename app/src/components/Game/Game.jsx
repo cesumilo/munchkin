@@ -5,10 +5,10 @@ import Hand from './Hand.jsx';
 
 import '../../css/Game.css';
 
-export default () => (
+export default ({player}) => (
   <div className="game-container">
     <Container className="game-board">
-      <GameBoard />
+      <GameBoard player={player}/>
       <Hand />
     </Container>
     <div className="hand-background" />

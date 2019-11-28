@@ -10,7 +10,7 @@ import BackgroundRight from '../../img/Backgrounds/right_side.png';
 
 import '../../css/GameBoard.css';
 
-const GameBoard = () => (
+const GameBoard = ({player}) => (
   <Row className="board">
     <Col sm={2} className="col-sm-2 board-col left-side">
       <img
@@ -19,7 +19,7 @@ const GameBoard = () => (
         alt="Left side background"
       />
       <Col sm={12} className="left-side-info">
-        <PlayerInfo />
+        <PlayerInfo player={player}/>
         <CardInfo />
         <Equipments />
       </Col>
